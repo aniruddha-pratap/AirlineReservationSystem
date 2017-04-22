@@ -12,7 +12,7 @@ public class PassengerService {
 	@Autowired
 	private PassengerRepository passengerRepository;
 	
-	public Passenger getPassenger(int id){
+	public Passenger getPassenger(String id){
 		return passengerRepository.findOne(id);
 	}
 	
@@ -24,7 +24,7 @@ public class PassengerService {
 		passengerRepository.save(passenger);
 	}
 	
-	public void deletePassenger(int id){
+	public void deletePassenger(String id){
 		passengerRepository.delete(id);
 	}
 	

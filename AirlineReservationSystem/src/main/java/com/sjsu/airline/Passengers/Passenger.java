@@ -9,7 +9,7 @@ public class Passenger {
 
 	@Id
 	@GeneratedValue
-	private int id;
+	private String id;
 	private String firstname;
     private String lastname;
     private int age;
@@ -20,10 +20,10 @@ public class Passenger {
     	
     }
     
-    public int getId() {
+    public String getId() {
 		return id;
 	}
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	public String getFirstname() {

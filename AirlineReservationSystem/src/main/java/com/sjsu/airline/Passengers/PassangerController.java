@@ -25,7 +25,7 @@ public class PassangerController {
 	}
 	
 	@GetMapping("/passenger/{id}")
-	public Passenger getPassenger(@PathVariable int id){
+	public Passenger getPassenger(@PathVariable String id){
 		return passengerService.getPassenger(id);
 	}
 	
@@ -42,7 +42,7 @@ public class PassangerController {
 	}
 	
 	@DeleteMapping
-	public List<Passenger> deletePassenger(@PathVariable int id){
+	public List<Passenger> deletePassenger(@PathVariable String id){
 		passengerService.deletePassenger(id);
 		return passengerService.getAllPassengers();
 	}
