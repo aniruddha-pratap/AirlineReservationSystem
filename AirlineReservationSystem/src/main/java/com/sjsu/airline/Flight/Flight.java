@@ -3,6 +3,7 @@ package com.sjsu.airline.Flight;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.Column;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -11,6 +12,7 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import com.sjsu.airline.Passengers.Passenger;
+import com.sjsu.airline.Plane.Plane;
 
 
 @Entity
@@ -29,6 +31,16 @@ public class Flight {
 	private int seatsLeft;
 	private String description;
 	
+	@Embedded
+	private Plane plane;
+	
+	public Plane getPlane() {
+		return plane;
+	}
+	public void setPlane(Plane plane) {
+		this.plane = plane;
+	}
+		
 	public String getNumber() {
 		return number;
 	}

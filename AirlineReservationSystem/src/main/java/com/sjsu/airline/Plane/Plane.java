@@ -1,20 +1,28 @@
 package com.sjsu.airline.Plane;
 
+import javax.persistence.Column;
+import javax.persistence.Embeddable;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Entity
-@Table(name="plane")
+@Embeddable
 public class Plane {
 	
-	@Id
-	@GeneratedValue
+	@Column(name="plane_id")
 	private int plane_id;
+
+	@Column(name="capacity")
 	private int capacity;
+	
+	@Column(name="model")
 	private String model;
+	
+	@Column(name="manufacturer")
 	private String manufacturer;
+	
+	@Column(name="year_of_manufacture")
 	private int yearOfManufacture;
 	
 	public Plane(){
