@@ -3,8 +3,10 @@ package com.sjsu.airline.Plane;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 
 @Entity
+@Table(name="plane")
 public class Plane {
 	
 	@Id
