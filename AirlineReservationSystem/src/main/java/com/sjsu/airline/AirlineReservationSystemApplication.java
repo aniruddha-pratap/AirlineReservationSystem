@@ -18,12 +18,8 @@ public class AirlineReservationSystemApplication extends WebMvcConfigurerAdapter
 	
 	@Override
 	public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-		configurer.favorParameter(true).parameterName("xml").
+		configurer.favorParameter(true).parameterName("xml").ignoreAcceptHeader(true).
 		defaultContentType(MediaType.APPLICATION_JSON)
 		.mediaType("true", MediaType.APPLICATION_XML);
-		
-		
 	}
-	
-	
 }

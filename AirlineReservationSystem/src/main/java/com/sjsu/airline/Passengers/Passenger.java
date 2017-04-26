@@ -5,11 +5,13 @@ import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sjsu.airline.Reservations.Reservation;
 
 @Entity
@@ -19,24 +21,27 @@ public class Passenger {
 	@Id
 	@GeneratedValue
 	@Column(name="passenger_id")
-	private String id;
+	private int id;
 	private String firstname;
     private String lastname;
     private int age;
     private String gender;
+    
+    @Column(unique=true)
     private String phone;
    
-    @OneToMany(mappedBy="passenger", cascade=CascadeType.ALL)
+    @OneToMany(mappedBy="passenger", fetch= FetchType.EAGER, cascade=CascadeType.ALL)
+    @JsonManagedReference
     private List<Reservation> reservation;
     
     public Passenger(){
     	
     }
     
-    public String getId() {
+    public int getId() {
 		return id;
 	}
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public String getFirstname() {

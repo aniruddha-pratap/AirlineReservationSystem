@@ -89,7 +89,4 @@ public class Flight {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
-
-	
 }
