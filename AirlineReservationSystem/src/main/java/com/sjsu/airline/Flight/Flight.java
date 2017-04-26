@@ -40,7 +40,7 @@ public class Flight {
 	public void setPlane(Plane plane) {
 		this.plane = plane;
 	}
-		
+	public void setId(String number){this.number=number;}
 	public String getNumber() {
 		return number;
 	}
@@ -89,7 +89,10 @@ public class Flight {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
+	public void setCapacity(int capacity){this.plane.setCapacity(capacity);}
+	public void setModel(String model){this.plane.setModel(model);}
+	public void setManufacturer(String manufacturer){this.plane.setManufacturer(manufacturer);}
+	public void setYearOfManufacture(int yearOfManufacture){this.plane.setYearOfManufacture(yearOfManufacture);}
 
 	
 }

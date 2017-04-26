@@ -1,8 +1,11 @@
 package com.sjsu.airline.repositories;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import com.sjsu.airline.Flight.Flight;
 
-public interface FlightRepository extends JpaRepository<Flight, String>{
+import com.sjsu.airline.Flight.Flight;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.transaction.annotation.Transactional;
+
+@Transactional
+public interface FlightRepository extends JpaRepository<Flight,String>{
 
 }
