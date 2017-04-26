@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import com.sjsu.airline.Reservations.Reservation;
+//import com.sjsu.airline.Reservations.Reservation;
 
 @Entity
 @Table(name="passenger")
@@ -26,8 +26,8 @@ public class Passenger {
     private String gender;
     private String phone;
    
-    @OneToMany(mappedBy="passenger", cascade=CascadeType.ALL)
-    private List<Reservation> reservation;
+//    @OneToMany(mappedBy="passenger", cascade=CascadeType.ALL)
+//    private List<Reservation> reservation;
     
     public Passenger(){
     	
@@ -70,13 +70,13 @@ public class Passenger {
 		this.phone = phone;
 	}
 
-	public List<Reservation> getReservation() {
-		return reservation;
-	}
-
-	public void setReservation(List<Reservation> reservation) {
-		this.reservation = reservation;
-	}
+//	public List<Reservation> getReservation() {
+//		return reservation;
+//	}
+//
+//	public void setReservation(List<Reservation> reservation) {
+//		this.reservation = reservation;
+//	}
 	
 	
 	

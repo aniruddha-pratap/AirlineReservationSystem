@@ -1,15 +1,14 @@
 package com.sjsu.airline.Plane;
 
-import javax.persistence.Column;
-import javax.persistence.Embeddable;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.stereotype.Component;
+
+import javax.persistence.*;
 
 @Embeddable
+@Component
 public class Plane {
-	
+
 	@Column(name="plane_id")
 	private int plane_id;
 
@@ -24,9 +23,20 @@ public class Plane {
 	
 	@Column(name="year_of_manufacture")
 	private int yearOfManufacture;
-	
-	public Plane(){
-		
+
+    @Override
+    public String toString() {
+        return "Plane{" +
+                "plane_id=" + plane_id +
+                ", capacity=" + capacity +
+                ", model='" + model + '\'' +
+                ", manufacturer='" + manufacturer + '\'' +
+                ", yearOfManufacture=" + yearOfManufacture +
+                '}';
+    }
+
+    public Plane(){
+
 	}
 	
 	public int getPlane_id() {

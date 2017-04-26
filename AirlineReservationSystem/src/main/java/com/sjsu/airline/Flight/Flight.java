@@ -24,8 +24,8 @@ public class Flight {
 	@Column(name="flight_number")
 	private String number;
 	private int price;
-	private String from;
-	private String to;
+	private String fromSource;
+	private String toDestination;
 	private Date departureTime;
 	private Date arrivalTime;
 	private int seatsLeft;
@@ -53,17 +53,17 @@ public class Flight {
 	public void setPrice(int price) {
 		this.price = price;
 	}
-	public String getFrom() {
-		return from;
+	public String getFromSource() {
+		return fromSource;
 	}
-	public void setFrom(String from) {
-		this.from = from;
+	public void setFromSource(String from) {
+		this.fromSource = from;
 	}
-	public String getTo() {
-		return to;
+	public String getToDestination() {
+		return toDestination;
 	}
-	public void setTo(String to) {
-		this.to = to;
+	public void setToDestination(String to) {
+		this.toDestination = to;
 	}
 	public Date getDepartureTime() {
 		return departureTime;
@@ -89,7 +89,16 @@ public class Flight {
 	public void setDescription(String description) {
 		this.description = description;
 	}
-	
 
-	
+    public void setModel(String model) {
+        this.plane.setModel(model);
+    }
+
+    public void setManufacturer(String manufacturer) {
+        this.plane.setManufacturer(manufacturer);
+    }
+
+    public void setYearOfManufacture(int yearOfManufacture) {
+        this.plane.setYearOfManufacture(yearOfManufacture);
+    }
 }

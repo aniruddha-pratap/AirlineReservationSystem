@@ -21,6 +21,7 @@ public class PassangerController {
 	
 	@GetMapping(value="/allPassengers")
 	public List<Passenger> getAllPassengers(@RequestParam(value="xml") String xml){
+		System.out.println("In get all passengers/..");
 		return passengerService.getAllPassengers();
 	}
 	
