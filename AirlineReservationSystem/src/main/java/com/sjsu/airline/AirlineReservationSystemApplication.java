@@ -9,7 +9,7 @@ import org.springframework.web.servlet.config.annotation.ContentNegotiationConfi
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @EnableJpaRepositories(basePackages = "com.sjsu.airline.repositories")
-@EntityScan(basePackages = {"com.sjsu.airline.Passengers", "com.sjsu.airline.Plane", "com.sjsu.airline.Flight"})
+@EntityScan(basePackages = {"com.sjsu.airline.Passengers", "com.sjsu.airline.Plane", "com.sjsu.airline.Reservations", "com.sjsu.airline.Flight"})
 @SpringBootApplication
 public class AirlineReservationSystemApplication extends WebMvcConfigurerAdapter{
 	public static void main(String[] args) {
@@ -18,12 +18,8 @@ public class AirlineReservationSystemApplication extends WebMvcConfigurerAdapter
 	
 	@Override
 	public void configureContentNegotiation(ContentNegotiationConfigurer configurer) {
-		configurer.favorParameter(true).parameterName("xml").
+		configurer.favorParameter(true).parameterName("xml").ignoreAcceptHeader(true).
 		defaultContentType(MediaType.APPLICATION_JSON)
 		.mediaType("true", MediaType.APPLICATION_XML);
-		
-		
 	}
-	
-	
 }
