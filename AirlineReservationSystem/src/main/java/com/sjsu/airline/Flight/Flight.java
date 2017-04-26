@@ -2,25 +2,19 @@ package com.sjsu.airline.Flight;
 
 import java.util.Date;
 import java.util.List;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sjsu.airline.Passengers.Passenger;
 import com.sjsu.airline.Plane.Plane;
+import com.sjsu.airline.Reservations.Reservation;
 
 
 @Entity
 @Table(name="flight")
 public class Flight {
-	
+
 	@Id
-	@GeneratedValue
 	@Column(name="flight_number")
 	private String number;
 	private int price;
@@ -30,17 +24,41 @@ public class Flight {
 	private Date arrivalTime;
 	private int seatsLeft;
 	private String description;
-	
-	@Embedded
+
+	Flight(){
+		plane=new Plane();
+	}
+
+//	@ManyToOne(fetch= FetchType.EAGER, cascade=CascadeType.ALL)
+//	@JoinColumn(name="order_number")
+//	@JsonBackReference
+//	private Reservation reservation;
+
+	//@Embedded
 	private Plane plane;
-	
+
 	public Plane getPlane() {
 		return plane;
 	}
 	public void setPlane(Plane plane) {
 		this.plane = plane;
 	}
-		
+
+	@Override
+	public String toString() {
+		return "Flight{" +
+				"number='" + number + '\'' +
+				", price=" + price +
+				", fromSource='" + fromSource + '\'' +
+				", toDestination='" + toDestination + '\'' +
+				", departureTime=" + departureTime +
+				", arrivalTime=" + arrivalTime +
+				", seatsLeft=" + seatsLeft +
+				", description='" + description + '\'' +
+				", plane=" + plane.toString() +
+				'}';
+	}
+
 	public String getNumber() {
 		return number;
 	}
@@ -94,6 +112,9 @@ public class Flight {
         this.plane.setModel(model);
     }
 
+	public void setCapacity(int capacity){
+		this.plane.setCapacity(capacity);
+	}
     public void setManufacturer(String manufacturer) {
         this.plane.setManufacturer(manufacturer);
     }

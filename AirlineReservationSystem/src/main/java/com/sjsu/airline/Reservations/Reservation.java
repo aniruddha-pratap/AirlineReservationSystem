@@ -35,9 +35,9 @@ public class Reservation {
 	@JsonBackReference
 	private Passenger passenger; 
 	
-	@OneToMany(mappedBy="reservation", fetch= FetchType.EAGER, cascade=CascadeType.ALL)
-	@JsonManagedReference
-	private List<Flight> flight;
+//	@OneToMany(mappedBy="reservation", fetch= FetchType.EAGER, cascade=CascadeType.ALL)
+//	@JsonManagedReference
+//	private List<Flight> flight;
 	
 	public int getOrderNumber() {
 		return orderNumber;
