@@ -2,17 +2,23 @@ package com.sjsu.airline.Flight;
 
 import java.util.Date;
 import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embedded;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sjsu.airline.Passengers.Passenger;
 import com.sjsu.airline.Plane.Plane;
+import com.sjsu.airline.Reservations.Reservation;
 
 
 @Entity
@@ -21,30 +27,37 @@ public class Flight {
 	
 	@Id
 	@GeneratedValue
-	@Column(name="flight_number")
-	private String number;
+	private int number;
 	private int price;
+	@Column(name="source")
 	private String from;
+	@Column(name="destination")
 	private String to;
 	private Date departureTime;
 	private Date arrivalTime;
 	private int seatsLeft;
 	private String description;
 	
-	@Embedded
-	private Plane plane;
 	
-	public Plane getPlane() {
+	@ManyToOne(fetch= FetchType.EAGER, cascade=CascadeType.ALL)
+	@JoinColumn(name="order_number")
+	@JsonBackReference
+	private Reservation reservation;
+	
+	//@Embedded
+	//private Plane plane;
+	
+	/*public Plane getPlane() {
 		return plane;
 	}
 	public void setPlane(Plane plane) {
 		this.plane = plane;
-	}
+	}*/
 		
-	public String getNumber() {
+	public int getNumber() {
 		return number;
 	}
-	public void setNumber(String number) {
+	public void setNumber(int number) {
 		this.number = number;
 	}
 	public int getPrice() {

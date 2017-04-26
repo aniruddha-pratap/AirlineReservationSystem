@@ -15,6 +15,8 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.sjsu.airline.Flight.Flight;
 //import com.sjsu.airline.Flight.Flight;
 import com.sjsu.airline.Passengers.Passenger;
 
@@ -33,6 +35,9 @@ public class Reservation {
 	@JsonBackReference
 	private Passenger passenger; 
 	
+	@OneToMany(mappedBy="reservation", fetch= FetchType.EAGER, cascade=CascadeType.ALL)
+	@JsonManagedReference
+	private List<Flight> flight;
 	
 	public int getOrderNumber() {
 		return orderNumber;
