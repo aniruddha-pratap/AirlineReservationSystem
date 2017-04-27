@@ -1,3 +1,6 @@
+/* Work on returning error messages */
+
+
 package com.sjsu.airline.Flight;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +28,11 @@ public class FlightController {
         return flightService.getAllFlights();
     }
 
+    @GetMapping(value = "/{id}")
+    public Flight getFlight(@RequestParam(value="json") String json,@PathVariable String id){
+        return flightService.getFlight(id);
+    }
+
     @PostMapping(value="/{id}")
     public boolean saveOrUpdateFlight(@PathVariable String id,
                                       @RequestParam(value="price") int price,
@@ -37,7 +45,7 @@ public class FlightController {
                                       @RequestParam(value="model") String model,
                                       @RequestParam(value="manufacturer") String manufacturer,
                                       @RequestParam(value="yearOfManufacture") int yearOfManufacture
-                                      ){ // Check for update overlapping with a Passenger Timings
+                                      ){
 
         Flight flight=new Flight();
 

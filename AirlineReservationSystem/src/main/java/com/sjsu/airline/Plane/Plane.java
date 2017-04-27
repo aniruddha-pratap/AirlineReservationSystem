@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 import javax.persistence.*;
 
 @Embeddable
-@Component
+@Entity
 public class Plane {
 
 	@Column(name="plane_id")
@@ -20,7 +20,7 @@ public class Plane {
 	
 	@Column(name="manufacturer")
 	private String manufacturer;
-	
+
 	@Column(name="year_of_manufacture")
 	private int yearOfManufacture;
 

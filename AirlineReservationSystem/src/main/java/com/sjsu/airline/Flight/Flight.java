@@ -3,11 +3,15 @@ package com.sjsu.airline.Flight;
 import java.util.Date;
 import java.util.List;
 import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.sjsu.airline.Passengers.Passenger;
 import com.sjsu.airline.Plane.Plane;
 import com.sjsu.airline.Reservations.Reservation;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.CascadeType;
 
 
 @Entity
@@ -25,17 +29,16 @@ public class Flight {
 	private int seatsLeft;
 	private String description;
 
-	Flight(){
-		plane=new Plane();
-	}
+	@OneToOne
+	@Cascade(value = CascadeType.MERGE)
+	private Plane plane;
 
 //	@ManyToOne(fetch= FetchType.EAGER, cascade=CascadeType.ALL)
 //	@JoinColumn(name="order_number")
 //	@JsonBackReference
 //	private Reservation reservation;
 
-	//@Embedded
-	private Plane plane;
+	private List<Passenger> passengers;
 
 	public Plane getPlane() {
 		return plane;
@@ -83,6 +86,15 @@ public class Flight {
 	public void setToDestination(String to) {
 		this.toDestination = to;
 	}
+
+	public void addPassenger(Passenger passenger){
+		passengers.add(passenger);
+	}
+
+	public List<Passenger> getPassengers(){
+		return passengers;
+	}
+
 	public Date getDepartureTime() {
 		return departureTime;
 	}
