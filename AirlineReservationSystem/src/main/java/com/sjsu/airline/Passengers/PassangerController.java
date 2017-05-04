@@ -71,7 +71,7 @@ public class PassangerController {
 		return passengerService.updatePassenger(id, firstName, lastName, age, gender, phone);
 	}
 	
-	@DeleteMapping
+	@DeleteMapping("/{id}")
 	public List<Passenger> deletePassenger(@PathVariable int id){
 		passengerService.deletePassenger(id);
 		return passengerService.getAllPassengers();

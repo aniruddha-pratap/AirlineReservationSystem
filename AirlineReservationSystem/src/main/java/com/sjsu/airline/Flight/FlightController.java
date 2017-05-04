@@ -4,8 +4,6 @@
 package com.sjsu.airline.Flight;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
@@ -29,12 +27,13 @@ public class FlightController {
     }
 
     @GetMapping(value = "/{id}")
-    public Flight getFlight(@RequestParam(value="json") String json,@PathVariable String id){
+    public Flight getFlight(@PathVariable String id){
+        System.out.println("Request for flight "+id);
         return flightService.getFlight(id);
     }
 
     @PostMapping(value="/{id}")
-    public boolean saveOrUpdateFlight(@PathVariable String id,
+    public Flight saveOrUpdateFlight(@PathVariable String id,
                                       @RequestParam(value="price") int price,
                                       @RequestParam(value="from") String from,
                                       @RequestParam(value="to") String to,
@@ -57,6 +56,7 @@ public class FlightController {
         flight.setArrivalTime(arrivalTime);
         flight.setDescription(description);
         flight.setCapacity(capacity);
+        flight.setSeatsLeft(capacity);
         flight.setModel(model);
         flight.setManufacturer(manufacturer);
         flight.setYearOfManufacture(yearOfManufacture);
@@ -64,5 +64,10 @@ public class FlightController {
         System.out.println(flight.toString());
 
         return flightService.saveOrUpdateFlight(flight);
+    }
+
+    @DeleteMapping("/{id}")
+    public boolean deleteFlight(@PathVariable String id){
+        return flightService.deleteFlight(id);
     }
 }

@@ -1,17 +1,13 @@
 package com.sjsu.airline.Passengers;
 
 import java.util.List;
+import java.util.Set;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.sjsu.airline.Flight.Flight;
 import com.sjsu.airline.Reservations.Reservation;
 
 @Entity
@@ -21,7 +17,7 @@ public class Passenger {
 	@Id
 	@GeneratedValue
 	@Column(name="passenger_id")
-	private int id;
+	private int passenger_id;
 	private String firstname;
     private String lastname;
     private int age;
@@ -33,16 +29,20 @@ public class Passenger {
     @OneToMany(mappedBy="passenger", fetch= FetchType.EAGER, cascade=CascadeType.ALL)
     @JsonManagedReference
     private List<Reservation> reservation;
-    
-    public Passenger(){
+
+	@ManyToMany(mappedBy="passengers", cascade=CascadeType.ALL)
+	@JsonManagedReference
+	private List<Flight> flight;
+
+	public Passenger(){
     	
     }
     
-    public int getId() {
-		return id;
+    public int getPassengerId() {
+		return passenger_id;
 	}
-	public void setId(int id) {
-		this.id = id;
+	public void setPassengerId(int id) {
+		this.passenger_id = id;
 	}
 	public String getFirstname() {
 		return firstname;
@@ -79,10 +79,12 @@ public class Passenger {
 		return reservation;
 	}
 
-	public void setReservation(List<Reservation> reservation) {
-		this.reservation = reservation;
+	public void addReservation(Reservation reservation) {
+		this.reservation.add(reservation);
 	}
-	
-	
-	
+
+
+//	public void addFlight(Flight flight) {
+//		this.flight.add(flight);
+//	}
 }

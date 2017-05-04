@@ -9,6 +9,8 @@ import javax.persistence.*;
 @Entity
 public class Plane {
 
+	@Id
+	@GeneratedValue
 	@Column(name="plane_id")
 	private int plane_id;
 

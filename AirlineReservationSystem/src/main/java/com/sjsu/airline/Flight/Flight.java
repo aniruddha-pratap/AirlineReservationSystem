@@ -1,18 +1,17 @@
 package com.sjsu.airline.Flight;
-
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import javax.persistence.*;
 import javax.persistence.Entity;
 import javax.persistence.Table;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sjsu.airline.Passengers.Passenger;
 import com.sjsu.airline.Plane.Plane;
 import com.sjsu.airline.Reservations.Reservation;
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.CascadeType;
-
 
 @Entity
 @Table(name="flight")
@@ -30,14 +29,19 @@ public class Flight {
 	private String description;
 
 	@OneToOne
+	@JoinColumn(name="plane_id")
 	@Cascade(value = CascadeType.MERGE)
-	private Plane plane;
+	@Embedded
+	private Plane plane=new Plane();
 
-//	@ManyToOne(fetch= FetchType.EAGER, cascade=CascadeType.ALL)
-//	@JoinColumn(name="order_number")
-//	@JsonBackReference
-//	private Reservation reservation;
+	@ManyToMany(fetch= FetchType.EAGER, cascade=javax.persistence.CascadeType.ALL)
+	@JoinColumn(name="order_number")
+	@JsonBackReference
+	private Set<Reservation> reservation;
 
+	@ManyToMany(fetch= FetchType.EAGER, cascade=javax.persistence.CascadeType.ALL)
+	@JoinColumn(name="passenger_id")
+	@JsonBackReference
 	private List<Passenger> passengers;
 
 	public Plane getPlane() {
@@ -87,14 +91,9 @@ public class Flight {
 		this.toDestination = to;
 	}
 
-	public void addPassenger(Passenger passenger){
-		passengers.add(passenger);
-	}
-
 	public List<Passenger> getPassengers(){
-		return passengers;
+		return null;
 	}
-
 	public Date getDepartureTime() {
 		return departureTime;
 	}
@@ -130,8 +129,14 @@ public class Flight {
     public void setManufacturer(String manufacturer) {
         this.plane.setManufacturer(manufacturer);
     }
-
+	public void addPassenger(Passenger passenger){
+		this.passengers.add(passenger);
+	}
     public void setYearOfManufacture(int yearOfManufacture) {
         this.plane.setYearOfManufacture(yearOfManufacture);
     }
+
+	public void setReservation(Reservation reservation) {
+		this.reservation.add(reservation);
+	}
 }
