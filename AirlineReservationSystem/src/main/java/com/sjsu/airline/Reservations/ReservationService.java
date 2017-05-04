@@ -67,9 +67,9 @@ public class ReservationService {
 
         System.out.println("Passenger who booked this reservation :"+reservation.getPassenger().getFirstname());
 
-        for(Flight flight:flightsToBeReserved){
-            flightService.setReservation(flight,reservation);
-        }
+//        for(Flight flight:flightsToBeReserved){
+//            flightService.setReservation(flight,reservation);
+//        }
 //        passengerService.addReservation(passenger,reservation);
 
         try {
