@@ -10,7 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Vivek Agarwal on 5/2/2017.
@@ -60,9 +62,11 @@ public class ReservationService {
         }
 
         Reservation reservation=new Reservation();
-        for(Flight flight:flightsToBeReserved){
+        /*for(Flight flight:flightsToBeReserved){
             reservation.addFlight(flight);
-        }
+        }*/
+        Set<Flight> f = new HashSet<Flight>(flightsToBeReserved);
+        reservation.setFlights(f);
         reservation.setPassenger(passenger);
         reservation.setPrice(cost);
 

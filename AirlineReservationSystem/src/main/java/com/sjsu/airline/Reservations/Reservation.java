@@ -8,7 +8,6 @@ import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sjsu.airline.Flight.Flight;
-//import com.sjsu.airline.Flight.Flight;
 import com.sjsu.airline.Passengers.Passenger;
 
 @Entity
@@ -27,7 +26,9 @@ public class Reservation {
 	@JsonBackReference
 	private Passenger passenger;
 
-	@ManyToMany(mappedBy="reservation", fetch= FetchType.EAGER, cascade=CascadeType.ALL)
+	@ManyToMany(fetch= FetchType.EAGER, cascade=CascadeType.ALL)
+	@JoinTable(name="reservation_flight", joinColumns= {@JoinColumn(name="order_number")}, 
+	inverseJoinColumns = {@JoinColumn(name="flight_number")})
 	@JsonManagedReference
 	private Set<Flight> flights;
 
@@ -52,9 +53,9 @@ public class Reservation {
 
 	public Set<Flight> getFlights(){return flights;}
 
-//	public void setFlights(List<Flight> flights){
-//		this.flights=flights;
-//	}
+	public void setFlights(Set<Flight> flights){
+		this.flights=flights;
+	}
 
 	public void addFlight(Flight flight) {
 		this.flights.add(flight);

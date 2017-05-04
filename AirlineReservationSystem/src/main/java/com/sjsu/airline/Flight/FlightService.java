@@ -11,12 +11,12 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Created by Vivek Agarwal on 4/26/2017.
  */
 @Service
-
 public class FlightService {
 
     @Autowired
@@ -46,7 +46,7 @@ public class FlightService {
                 System.out.println("Passenger is null in Flight Service");
             List<Reservation> reservations=passenger.getReservation();
             for(Reservation reservation:reservations){
-                List<Flight> bookedFlights=reservation.getFlights();
+                Set<Flight> bookedFlights=reservation.getFlights();
                 for(Flight bookedFlight:bookedFlights){
                     if(bookedFlight != presentFlight){
                         List<Date> reservedTiming=new ArrayList<>();

@@ -34,13 +34,12 @@ public class Flight {
 	@Embedded
 	private Plane plane=new Plane();
 
-	@ManyToMany(fetch= FetchType.EAGER, cascade=javax.persistence.CascadeType.ALL)
-	@JoinColumn(name="order_number")
+	@ManyToMany(mappedBy = "flights",fetch= FetchType.EAGER, cascade=javax.persistence.CascadeType.ALL)
+	//@JoinColumn(name="order_number")
 	@JsonBackReference
 	private Set<Reservation> reservation;
-
-	@ManyToMany(fetch= FetchType.EAGER, cascade=javax.persistence.CascadeType.ALL)
-	@JoinColumn(name="passenger_id")
+	
+	@ManyToMany(mappedBy="flight", cascade = javax.persistence.CascadeType.ALL)
 	@JsonBackReference
 	private List<Passenger> passengers;
 
@@ -123,6 +122,15 @@ public class Flight {
         this.plane.setModel(model);
     }
 
+	public Set<Reservation> getReservation() {
+		return reservation;
+	}
+	public void setReservation(Set<Reservation> reservation) {
+		this.reservation = reservation;
+	}
+	public void setPassengers(List<Passenger> passengers) {
+		this.passengers = passengers;
+	}
 	public void setCapacity(int capacity){
 		this.plane.setCapacity(capacity);
 	}
