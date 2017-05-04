@@ -22,6 +22,7 @@ public class PassangerController {
 	
 	@GetMapping(value="/allPassengers")
 	public List<Passenger> getAllPassengers(@RequestParam(value="xml") String xml){
+		System.out.println("In get all passengers/..");
 		return passengerService.getAllPassengers();
 	}
 	
@@ -70,7 +71,7 @@ public class PassangerController {
 		return passengerService.updatePassenger(id, firstName, lastName, age, gender, phone);
 	}
 	
-	@DeleteMapping
+	@DeleteMapping("/{id}")
 	public List<Passenger> deletePassenger(@PathVariable int id){
 		passengerService.deletePassenger(id);
 		return passengerService.getAllPassengers();

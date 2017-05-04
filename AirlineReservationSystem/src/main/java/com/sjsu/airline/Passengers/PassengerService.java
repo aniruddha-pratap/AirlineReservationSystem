@@ -2,6 +2,9 @@ package com.sjsu.airline.Passengers;
 
 import java.util.List;
 import java.util.UUID;
+
+import com.sjsu.airline.Flight.Flight;
+import com.sjsu.airline.Reservations.Reservation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.sjsu.airline.repositories.PassengerRepository;
@@ -47,5 +50,14 @@ public class PassengerService {
 		}
 		return passengerRepository.findOne(id);
 	}
-	
+
+	public void addReservation(Passenger passenger,Reservation reservation) {
+		passenger.addReservation(reservation);
+		//passengerRepository.save(passenger);
+	}
+
+//	public Passenger addFlight(Flight flight, Passenger passenger) {
+//		passenger.addFlight(flight);
+//		return passenger;
+//	}
 }

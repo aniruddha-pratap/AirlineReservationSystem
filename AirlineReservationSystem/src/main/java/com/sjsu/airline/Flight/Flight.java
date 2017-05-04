@@ -1,63 +1,75 @@
 package com.sjsu.airline.Flight;
-
 import java.util.Date;
 import java.util.List;
-
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Embedded;
+import java.util.Set;
+import javax.persistence.*;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sjsu.airline.Passengers.Passenger;
 import com.sjsu.airline.Plane.Plane;
 import com.sjsu.airline.Reservations.Reservation;
-
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.CascadeType;
 
 @Entity
 @Table(name="flight")
 public class Flight {
-	
+
 	@Id
-	@GeneratedValue
-	private int number;
+	@Column(name="flight_number")
+	private String number;
 	private int price;
-	@Column(name="source")
-	private String from;
-	@Column(name="destination")
-	private String to;
+	private String fromSource;
+	private String toDestination;
 	private Date departureTime;
 	private Date arrivalTime;
 	private int seatsLeft;
 	private String description;
-	
-	
-	@ManyToOne(fetch= FetchType.EAGER, cascade=CascadeType.ALL)
+
+	@OneToOne
+	@JoinColumn(name="plane_id")
+	@Cascade(value = CascadeType.MERGE)
+	@Embedded
+	private Plane plane=new Plane();
+
+	@ManyToMany(fetch= FetchType.EAGER, cascade=javax.persistence.CascadeType.ALL)
 	@JoinColumn(name="order_number")
 	@JsonBackReference
-	private Reservation reservation;
-	
-	//@Embedded
-	//private Plane plane;
-	
-	/*public Plane getPlane() {
+	private Set<Reservation> reservation;
+
+	@ManyToMany(fetch= FetchType.EAGER, cascade=javax.persistence.CascadeType.ALL)
+	@JoinColumn(name="passenger_id")
+	@JsonBackReference
+	private List<Passenger> passengers;
+
+	public Plane getPlane() {
 		return plane;
 	}
 	public void setPlane(Plane plane) {
 		this.plane = plane;
-	}*/
-		
-	public int getNumber() {
+	}
+
+	@Override
+	public String toString() {
+		return "Flight{" +
+				"number='" + number + '\'' +
+				", price=" + price +
+				", fromSource='" + fromSource + '\'' +
+				", toDestination='" + toDestination + '\'' +
+				", departureTime=" + departureTime +
+				", arrivalTime=" + arrivalTime +
+				", seatsLeft=" + seatsLeft +
+				", description='" + description + '\'' +
+				", plane=" + plane.toString() +
+				'}';
+	}
+
+	public String getNumber() {
 		return number;
 	}
-	public void setNumber(int number) {
+	public void setNumber(String number) {
 		this.number = number;
 	}
 	public int getPrice() {
@@ -66,17 +78,21 @@ public class Flight {
 	public void setPrice(int price) {
 		this.price = price;
 	}
-	public String getFrom() {
-		return from;
+	public String getFromSource() {
+		return fromSource;
 	}
-	public void setFrom(String from) {
-		this.from = from;
+	public void setFromSource(String from) {
+		this.fromSource = from;
 	}
-	public String getTo() {
-		return to;
+	public String getToDestination() {
+		return toDestination;
 	}
-	public void setTo(String to) {
-		this.to = to;
+	public void setToDestination(String to) {
+		this.toDestination = to;
+	}
+
+	public List<Passenger> getPassengers(){
+		return null;
 	}
 	public Date getDepartureTime() {
 		return departureTime;
@@ -101,5 +117,26 @@ public class Flight {
 	}
 	public void setDescription(String description) {
 		this.description = description;
+	}
+
+    public void setModel(String model) {
+        this.plane.setModel(model);
+    }
+
+	public void setCapacity(int capacity){
+		this.plane.setCapacity(capacity);
+	}
+    public void setManufacturer(String manufacturer) {
+        this.plane.setManufacturer(manufacturer);
+    }
+	public void addPassenger(Passenger passenger){
+		this.passengers.add(passenger);
+	}
+    public void setYearOfManufacture(int yearOfManufacture) {
+        this.plane.setYearOfManufacture(yearOfManufacture);
+    }
+
+	public void setReservation(Reservation reservation) {
+		this.reservation.add(reservation);
 	}
 }
