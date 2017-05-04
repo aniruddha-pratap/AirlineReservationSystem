@@ -1,6 +1,7 @@
 package com.sjsu.airline.Reservations;
 
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.*;
 
@@ -13,7 +14,7 @@ import com.sjsu.airline.Passengers.Passenger;
 @Entity
 @Table(name = "reservation")
 public class Reservation {
-	
+
 	@Id
 	@GeneratedValue
 	@Column(name="order_number")
@@ -28,8 +29,8 @@ public class Reservation {
 
 	@ManyToMany(mappedBy="reservation", fetch= FetchType.EAGER, cascade=CascadeType.ALL)
 	@JsonManagedReference
-	private List<Flight> flights;
-	
+	private Set<Flight> flights;
+
 	public int getOrderNumber() {
 		return orderNumber;
 	}
@@ -49,10 +50,13 @@ public class Reservation {
 		this.passenger = passenger;
 	}
 
-    public List<Flight> getFlights(){return flights;}
+	public Set<Flight> getFlights(){return flights;}
 
-	public void setFlights(List<Flight> flights){
-		this.flights=flights;
+//	public void setFlights(List<Flight> flights){
+//		this.flights=flights;
+//	}
+
+	public void addFlight(Flight flight) {
+		this.flights.add(flight);
 	}
-
 }

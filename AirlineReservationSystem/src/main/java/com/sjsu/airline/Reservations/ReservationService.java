@@ -56,20 +56,21 @@ public class ReservationService {
             cost+=flight.getPrice();
             System.out.println("In reserve" + flightService);
             if(flightService.addPassenger(flight,passenger)==null) return null;
-
             flightsToBeReserved.add(flight);
         }
 
         Reservation reservation=new Reservation();
-        reservation.setFlights(flightsToBeReserved);
+        for(Flight flight:flightsToBeReserved){
+            reservation.addFlight(flight);
+        }
         reservation.setPassenger(passenger);
         reservation.setPrice(cost);
 
         System.out.println("Passenger who booked this reservation :"+reservation.getPassenger().getFirstname());
 
-        for(Flight flight:flightsToBeReserved){
-            flightService.setReservation(flight,reservation);
-        }
+//        for(Flight flight:flightsToBeReserved){
+//            flightService.setReservation(flight,reservation);
+//        }
 //        passengerService.addReservation(passenger,reservation);
 
         try {
