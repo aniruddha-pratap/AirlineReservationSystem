@@ -56,12 +56,13 @@ public class ReservationService {
             cost+=flight.getPrice();
             System.out.println("In reserve" + flightService);
             if(flightService.addPassenger(flight,passenger)==null) return null;
-
             flightsToBeReserved.add(flight);
         }
 
         Reservation reservation=new Reservation();
-        reservation.setFlights(flightsToBeReserved);
+        for(Flight flight:flightsToBeReserved){
+            reservation.addFlight(flight);
+        }
         reservation.setPassenger(passenger);
         reservation.setPrice(cost);
 
