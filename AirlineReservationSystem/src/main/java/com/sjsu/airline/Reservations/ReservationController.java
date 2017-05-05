@@ -23,10 +23,15 @@ public class ReservationController {
         return reservationService.makeReservation(passengerID,flightLists);
     }
 
-//    @GetMapping(value="/")
-//    public Reservation searchReservation(@RequestParam(value = "passengerId") int passengerID,@RequestParam(value="from") String from, @RequestParam(value="to") String to,
-//                                         @RequestParam(value="flightNumber") String flightNumber){
-//
-//        return reservationService.searchReservation(passengerID,from,to,flightNumber);
-//    }
+    @GetMapping(value="/")
+    public List<Reservation> searchReservation(@RequestParam(value = "passengerId", required = false) Integer passengerID,@RequestParam(value="from",required = false) String from, @RequestParam(value="to", required = false) String to,
+                                         @RequestParam(value="flightNumber",required = false) String flightNumber){
+
+        return reservationService.searchReservation(passengerID,from,to,flightNumber);
+    }
+
+    @DeleteMapping(value = "/{id}")
+    public boolean deleteReservation(@PathVariable Integer id){
+        return reservationService.deleteReservation(id);
+    }
 }

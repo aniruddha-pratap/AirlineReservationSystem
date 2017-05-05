@@ -23,6 +23,16 @@ public class FlightService {
     @Autowired
     private FlightRepository flightRepository;
 
+    public Flight save(Flight flight) {
+        try {
+            flightRepository.save(flight);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return flight;
+    }
     public Flight saveOrUpdateFlight(Flight flight) {
 
         if(!flightRepository.exists(flight.getNumber())) {

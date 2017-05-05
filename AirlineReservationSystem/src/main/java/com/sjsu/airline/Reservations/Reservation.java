@@ -23,14 +23,14 @@ public class Reservation {
 
 	private int price;
 
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name="passenger_id")
 	@JsonBackReference
 	private Passenger passenger;
 
 	/*@ManyToMany(mappedBy="reservation", fetch= FetchType.EAGER, cascade=CascadeType.ALL)
 	@JsonManagedReference*/
-	@ManyToMany(fetch= FetchType.EAGER, cascade=CascadeType.ALL)
+	@ManyToMany(fetch= FetchType.EAGER)
 	@JoinTable(name="reservation_flight", joinColumns= {@JoinColumn(name="order_number")},
 			inverseJoinColumns = {@JoinColumn(name="flight_number")})
 	@JsonManagedReference

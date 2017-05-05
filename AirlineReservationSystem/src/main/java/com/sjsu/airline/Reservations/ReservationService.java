@@ -7,9 +7,11 @@ import com.sjsu.airline.Passengers.PassengerService;
 import com.sjsu.airline.repositories.FlightRepository;
 import com.sjsu.airline.repositories.ReservationRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.FieldRetrievingFactoryBean;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -88,29 +90,36 @@ public class ReservationService {
         return reservation;
     }
 
-//    public List<Reservation> searchReservation(int passengerID, String from, String to, String flightNumber) {
-//        List<Reservation> searchResults=new ArrayList<>();
-//        List<Reservation> reservationByPassengerID=reservationRepository.findByPassengerId(passengerID);
-////        List<Reservation> reservationByFrom=reservationRepository.findByFrom(from);
-////        List<Reservation> reservationByTo=reservationRepository.fingByTo(to);
-////        List<Reservation> reservationByFlightNumber=reservationRepository.findByFlightNumber(flightNumber);
-//
-////        for(Reservation reservation:reservationByFlightNumber){
-////            searchResults.add(reservation);
-////        }
-////        for(Reservation reservation:reservationByFrom){
-////            searchResults.add(reservation);
-////        }
-//
-//        for(Reservation reservation:reservationByPassengerID){
-//            searchResults.add(reservation);
-//        }
-//
-////        for(Reservation reservation:reservationByTo){
-////            searchResults.add(reservation);
-////        }
-//
-//
-//        return searchResults;
-//    }
+    public List<Reservation> searchReservation(Integer passengerID, String from, String to, String flightNumber) {
+        List<Reservation> searchResults=null;
+        try {
+            searchResults = reservationRepository.findByPassengerIdOrFlightNumberOrFromSourceOrToDestination(passengerID, from, to, flightNumber);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return searchResults;
+    }
+
+    public boolean deleteReservation(Integer id) {
+        try {
+            Reservation reservation=reservationRepository.findOne(id);
+            List<Flight> reservedFlights=reservation.getFlights();
+            Flight flights[]=new Flight[reservedFlights.size()];
+            int i=0;
+            for(Flight flight:reservedFlights)
+                flights[i++]=flight;
+
+            for(Flight flight:flights){
+                flight.setSeatsLeft(flight.getSeatsLeft()+1);
+                flightService.save(flight);
+            }
+            reservationRepository.delete(id);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
 }
