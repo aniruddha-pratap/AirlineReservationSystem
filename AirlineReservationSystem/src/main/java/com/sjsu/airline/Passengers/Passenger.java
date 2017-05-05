@@ -17,8 +17,30 @@ public class Passenger {
 	@Id
 	@GeneratedValue
 	@Column(name="passenger_id")
-	private int passenger_id;
+	private int id;
 	private String firstname;
+
+	private String lastname;
+	private int age;
+	private String gender;
+
+	@Column(unique=true)
+	private String phone;
+
+	@OneToMany(mappedBy="passenger", fetch= FetchType.EAGER, cascade=CascadeType.ALL)
+	@JsonManagedReference
+	private List<Reservation> reservation;
+
+	/*@ManyToMany(mappedBy="passengers", cascade=CascadeType.ALL)
+	@JsonManagedReference
+	private List<Flight> flight;*/
+
+
+	@ManyToMany(cascade=javax.persistence.CascadeType.ALL)
+	@JoinTable(name="flight_passenger", joinColumns= {@JoinColumn(name="passenger_id")},
+			inverseJoinColumns = {@JoinColumn(name="flight_number")})
+	@JsonManagedReference
+
     private String lastname;
     private int age;
     private String gender;
@@ -34,6 +56,7 @@ public class Passenger {
 	@JoinTable(name="flight_passenger", joinColumns= {@JoinColumn(name="passenger_id")}, 
 	inverseJoinColumns = {@JoinColumn(name="flight_number")})
     @JsonManagedReference
+
 	private List<Flight> flight;
     
     /*@ManyToOne(fetch= FetchType.EAGER, cascade=CascadeType.ALL)
@@ -42,14 +65,14 @@ public class Passenger {
 	private Flight flight;*/
 
 	public Passenger(){
-    	
-    }
-    
-    public int getPassengerId() {
-		return passenger_id;
+
+	}
+
+	public int getPassengerId() {
+		return id;
 	}
 	public void setPassengerId(int id) {
-		this.passenger_id = id;
+		this.id = id;
 	}
 	public String getFirstname() {
 		return firstname;
