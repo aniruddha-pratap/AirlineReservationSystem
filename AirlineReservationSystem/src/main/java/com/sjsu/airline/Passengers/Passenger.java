@@ -19,7 +19,6 @@ public class Passenger {
 	@Column(name="passenger_id")
 	private int id;
 	private String firstname;
-
 	private String lastname;
 	private int age;
 	private String gender;
@@ -31,38 +30,9 @@ public class Passenger {
 	@JsonManagedReference
 	private List<Reservation> reservation;
 
-	/*@ManyToMany(mappedBy="passengers", cascade=CascadeType.ALL)
+	@ManyToMany(mappedBy="passengers", cascade=CascadeType.ALL)
 	@JsonManagedReference
-	private List<Flight> flight;*/
-
-
-	@ManyToMany(cascade=javax.persistence.CascadeType.ALL)
-	@JoinTable(name="flight_passenger", joinColumns= {@JoinColumn(name="passenger_id")},
-			inverseJoinColumns = {@JoinColumn(name="flight_number")})
-	@JsonManagedReference
-
-    private String lastname;
-    private int age;
-    private String gender;
-    
-    @Column(unique=true)
-    private String phone;
-   
-    @OneToMany(mappedBy="passenger", fetch= FetchType.EAGER, cascade=CascadeType.ALL)
-    @JsonManagedReference
-    private List<Reservation> reservation;
-
-    @ManyToMany(cascade=javax.persistence.CascadeType.ALL)
-	@JoinTable(name="flight_passenger", joinColumns= {@JoinColumn(name="passenger_id")}, 
-	inverseJoinColumns = {@JoinColumn(name="flight_number")})
-    @JsonManagedReference
-
 	private List<Flight> flight;
-    
-    /*@ManyToOne(fetch= FetchType.EAGER, cascade=CascadeType.ALL)
-	@JoinColumn(name="flight_number")
-	@JsonBackReference
-	private Flight flight;*/
 
 	public Passenger(){
 
@@ -109,9 +79,9 @@ public class Passenger {
 		return reservation;
 	}
 
-/*	public void addReservation(Reservation reservation) {
+	public void addReservation(Reservation reservation) {
 		this.reservation.add(reservation);
-	}*/
+	}
 
 
 //	public void addFlight(Flight flight) {

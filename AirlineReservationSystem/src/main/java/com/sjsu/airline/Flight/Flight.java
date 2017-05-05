@@ -34,8 +34,7 @@ public class Flight {
 	@Embedded
 	private Plane plane=new Plane();
 
-
-	/*@ManyToMany(cascade=javax.persistence.CascadeType.ALL)
+	@ManyToMany(cascade=javax.persistence.CascadeType.ALL)
 	@JoinTable(
 			name="flight_reservation",
 			joinColumns = {@JoinColumn(name = "flight_number")},inverseJoinColumns = {@JoinColumn(name="order_number")}
@@ -45,23 +44,6 @@ public class Flight {
 
 	@ManyToMany(fetch= FetchType.EAGER, cascade=javax.persistence.CascadeType.ALL)
 	@JoinColumn(name="passenger_id")
-
-	@ManyToMany(mappedBy = "flights",fetch= FetchType.EAGER, cascade=javax.persistence.CascadeType.ALL)
-	//@JoinColumn(name="order_number")
-	@JsonBackReference
-	private Set<Reservation> reservation;
-	
-	@ManyToMany(mappedBy="flight", cascade = javax.persistence.CascadeType
-	@JsonBackReference
-	private List<Passenger> passengers;*/
-
-
-	@ManyToMany(mappedBy = "flights",fetch= FetchType.EAGER, cascade=javax.persistence.CascadeType.ALL)
-	//@JoinColumn(name="order_number")
-	@JsonBackReference
-	private Set<Reservation> reservation;
-
-	@ManyToMany(mappedBy="flight", cascade = javax.persistence.CascadeType.ALL)
 	@JsonBackReference
 	private List<Passenger> passengers;
 
@@ -144,15 +126,6 @@ public class Flight {
 		this.plane.setModel(model);
 	}
 
-	public Set<Reservation> getReservation() {
-		return reservation;
-	}
-	public void setReservation(Set<Reservation> reservation) {
-		this.reservation = reservation;
-	}
-	public void setPassengers(List<Passenger> passengers) {
-		this.passengers = passengers;
-	}
 	public void setCapacity(int capacity){
 		this.plane.setCapacity(capacity);
 	}
@@ -169,7 +142,7 @@ public class Flight {
 	public void setReservation(Reservation reservation) {
 		this.reservation.add(reservation);
 	}
-	public Set<Reservation> getReservation(){
+	public List<Reservation> getReservation(){
 		return this.reservation;
 	}
 }

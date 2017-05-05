@@ -51,10 +51,10 @@ public class PassengerService {
 		return passengerRepository.findOne(id);
 	}
 
-	/*public void addReservation(Passenger passenger,Reservation reservation) {
+	public void addReservation(Passenger passenger,Reservation reservation) {
 		passenger.addReservation(reservation);
 		//passengerRepository.save(passenger);
-	}*/
+	}
 
 //	public Passenger addFlight(Flight flight, Passenger passenger) {
 //		passenger.addFlight(flight);

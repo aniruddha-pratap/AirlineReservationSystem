@@ -22,7 +22,7 @@ public class FlightController {
     private FlightService flightService;
 
     @GetMapping(value = "/allFlights")
-    public List<Flight> getAllFlights(@RequestParam(value="xml", required = false) String xml, @RequestParam(value="json", required=false) String json){
+    public List<Flight> getAllFlights(@RequestParam(value="xml") String xml){
         return flightService.getAllFlights();
     }
 
