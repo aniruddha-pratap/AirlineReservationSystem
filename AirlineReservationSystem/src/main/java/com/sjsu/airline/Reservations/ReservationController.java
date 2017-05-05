@@ -13,7 +13,7 @@ public class ReservationController {
     private ReservationService reservationService;
 
     @GetMapping(value="/{id}")
-    public Reservation getReservation(@PathVariable int id, @RequestParam String xml){
+    public Reservation getReservation(@PathVariable int id, @RequestParam(value = "xml") String xml){
         Reservation reservation=reservationService.getReservation(id);
         return reservation;
     }
@@ -24,11 +24,11 @@ public class ReservationController {
     }
 
     @GetMapping(value="/")
-    public List<Reservation> searchReservation(@RequestParam(value = "passengerId") int passengerID,
-                                         @RequestParam(value="from") String from,
-                                         @RequestParam(value="to") String to,
-                                         @RequestParam(value="flightNumber") String flightNumber){
+    public List<Reservation> searchReservation(@RequestParam(value = "passengerId") int passengerID){
+//                                         @RequestParam(value="from") String from,
+//                                         @RequestParam(value="to") String to,
+//                                         @RequestParam(value="flightNumber") String flightNumber,@RequestParam(value = "xml") String xml){
         System.out.println("Trying to find passenger ID :"+passengerID+"\n\n\n");
-        return reservationService.searchReservation(passengerID,from,to,flightNumber);
+        return reservationService.searchReservation(passengerID,"","","");
     }
 }
