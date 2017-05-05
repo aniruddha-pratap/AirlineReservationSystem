@@ -14,7 +14,6 @@ import com.sjsu.airline.Exception.SpecialException;
 
 
 @RestController
-@RequestMapping("/airline")
 public class PassangerController {
 
 	@Autowired
