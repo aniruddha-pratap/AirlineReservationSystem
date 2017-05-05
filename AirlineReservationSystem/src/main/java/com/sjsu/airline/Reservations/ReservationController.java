@@ -46,11 +46,11 @@ public class ReservationController {
         if(flightsRemoved!=null && flightsRemoved.size()==0)
             return null;
 
-        if(flightsAdded!=null && flightsRemoved!=null){
-            if(!reservationService.carefulAddAndRemove(id,flightsAdded,flightsRemoved)) // Not defined yet.
-                return null;
-        }
-        else {
+//        if(flightsAdded!=null && flightsRemoved!=null){
+//            if(!reservationService.carefulAddAndRemove(id,flightsAdded,flightsRemoved)) // Not defined yet.
+//                return null;
+//        }
+//        else {
             if (flightsAdded != null) {
                 if (!reservationService.addFlights(id, flightsAdded))
                     return null;
@@ -59,7 +59,7 @@ public class ReservationController {
                 if (!reservationService.removeFlights(id, flightsRemoved))
                     return null;
             }
-        }
+//        }
 
         return reservationService.getReservation(id);
 
