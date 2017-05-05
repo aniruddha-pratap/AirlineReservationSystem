@@ -19,26 +19,26 @@ public class Passenger {
 	@Column(name="passenger_id")
 	private int passenger_id;
 	private String firstname;
-    private String lastname;
-    private int age;
-    private String gender;
-    
-    @Column(unique=true)
-    private String phone;
-   
-    @OneToMany(mappedBy="passenger", fetch= FetchType.EAGER, cascade=CascadeType.ALL)
-    @JsonManagedReference
-    private List<Reservation> reservation;
+	private String lastname;
+	private int age;
+	private String gender;
+
+	@Column(unique=true)
+	private String phone;
+
+	@OneToMany(mappedBy="passenger", fetch= FetchType.EAGER, cascade=CascadeType.ALL)
+	@JsonManagedReference
+	private List<Reservation> reservation;
 
 	@ManyToMany(mappedBy="passengers", cascade=CascadeType.ALL)
 	@JsonManagedReference
 	private List<Flight> flight;
 
 	public Passenger(){
-    	
-    }
-    
-    public int getPassengerId() {
+
+	}
+
+	public int getPassengerId() {
 		return passenger_id;
 	}
 	public void setPassengerId(int id) {

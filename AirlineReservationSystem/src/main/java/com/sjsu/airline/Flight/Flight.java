@@ -34,10 +34,13 @@ public class Flight {
 	@Embedded
 	private Plane plane=new Plane();
 
-	@ManyToMany(fetch= FetchType.EAGER, cascade=javax.persistence.CascadeType.ALL)
-	@JoinColumn(name="order_number")
+	@ManyToMany(cascade=javax.persistence.CascadeType.ALL)
+	@JoinTable(
+			name="flight_reservation",
+			joinColumns = {@JoinColumn(name = "flight_number")},inverseJoinColumns = {@JoinColumn(name="order_number")}
+	)
 	@JsonBackReference
-	private Set<Reservation> reservation;
+	private List<Reservation> reservation;
 
 	@ManyToMany(fetch= FetchType.EAGER, cascade=javax.persistence.CascadeType.ALL)
 	@JoinColumn(name="passenger_id")
@@ -119,24 +122,27 @@ public class Flight {
 		this.description = description;
 	}
 
-    public void setModel(String model) {
-        this.plane.setModel(model);
-    }
+	public void setModel(String model) {
+		this.plane.setModel(model);
+	}
 
 	public void setCapacity(int capacity){
 		this.plane.setCapacity(capacity);
 	}
-    public void setManufacturer(String manufacturer) {
-        this.plane.setManufacturer(manufacturer);
-    }
+	public void setManufacturer(String manufacturer) {
+		this.plane.setManufacturer(manufacturer);
+	}
 	public void addPassenger(Passenger passenger){
 		this.passengers.add(passenger);
 	}
-    public void setYearOfManufacture(int yearOfManufacture) {
-        this.plane.setYearOfManufacture(yearOfManufacture);
-    }
+	public void setYearOfManufacture(int yearOfManufacture) {
+		this.plane.setYearOfManufacture(yearOfManufacture);
+	}
 
 	public void setReservation(Reservation reservation) {
 		this.reservation.add(reservation);
+	}
+	public List<Reservation> getReservation(){
+		return this.reservation;
 	}
 }

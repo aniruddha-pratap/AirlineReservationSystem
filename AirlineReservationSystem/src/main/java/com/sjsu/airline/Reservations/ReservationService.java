@@ -47,6 +47,8 @@ public class ReservationService {
             return null;
         }
 
+
+        System.out.println("List of flights------:"+flightLists+"\n\n\n");
         for(String flightId : flightLists){
             Flight flight=flightService.getFlight(flightId);
             if(flight==null) {
@@ -54,13 +56,13 @@ public class ReservationService {
                 return null;
             }
             cost+=flight.getPrice();
-            System.out.println("In reserve" + flightService);
             if(flightService.addPassenger(flight,passenger)==null) return null;
             flightsToBeReserved.add(flight);
         }
 
         Reservation reservation=new Reservation();
         for(Flight flight:flightsToBeReserved){
+            System.out.println("Flight :"+flight+" \n\n");
             reservation.addFlight(flight);
         }
         reservation.setPassenger(passenger);
@@ -80,6 +82,9 @@ public class ReservationService {
             e.printStackTrace();
             return null;
         }
+
+        System.out.print(reservation.getFlights());
+
         return reservation;
     }
 

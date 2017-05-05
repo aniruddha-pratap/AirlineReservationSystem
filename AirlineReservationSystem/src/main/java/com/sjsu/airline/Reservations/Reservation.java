@@ -1,5 +1,6 @@
 package com.sjsu.airline.Reservations;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
@@ -22,14 +23,14 @@ public class Reservation {
 
 	private int price;
 
-	@ManyToOne(fetch= FetchType.EAGER, cascade=CascadeType.ALL)
+	@OneToOne(fetch= FetchType.EAGER, cascade=CascadeType.ALL)
 	@JoinColumn(name="passenger_id")
 	@JsonBackReference
 	private Passenger passenger;
 
 	@ManyToMany(mappedBy="reservation", fetch= FetchType.EAGER, cascade=CascadeType.ALL)
 	@JsonManagedReference
-	private Set<Flight> flights;
+	private List<Flight> flights=new ArrayList<>();
 
 	public int getOrderNumber() {
 		return orderNumber;
@@ -50,13 +51,16 @@ public class Reservation {
 		this.passenger = passenger;
 	}
 
-	public Set<Flight> getFlights(){return flights;}
+	public List<Flight> getFlights(){return flights;}
 
 //	public void setFlights(List<Flight> flights){
 //		this.flights=flights;
 //	}
 
+
 	public void addFlight(Flight flight) {
+		if(this.flights==null)
+			System.out.println("Null found! \n\n\n");
 		this.flights.add(flight);
 	}
 }
