@@ -1,6 +1,7 @@
 package com.sjsu.airline.Reservations;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -28,9 +29,15 @@ public class Reservation {
 	@JsonBackReference
 	private Passenger passenger;
 
-	@ManyToMany(mappedBy="reservation", fetch= FetchType.EAGER, cascade=CascadeType.ALL)
+	/*@ManyToMany(mappedBy="reservation", fetch= FetchType.EAGER, cascade=CascadeType.ALL)
 	@JsonManagedReference
-	private List<Flight> flights=new ArrayList<>();
+	private List<Flight> flights=new ArrayList<>();*/
+
+	@ManyToMany(fetch= FetchType.EAGER, cascade=CascadeType.ALL)
+	@JoinTable(name="reservation_flight", joinColumns= {@JoinColumn(name="order_number")},
+			inverseJoinColumns = {@JoinColumn(name="flight_number")})
+	@JsonManagedReference
+	private Set<Flight> flights=new HashSet<>();
 
 	public int getOrderNumber() {
 		return orderNumber;
@@ -51,7 +58,7 @@ public class Reservation {
 		this.passenger = passenger;
 	}
 
-	public List<Flight> getFlights(){return flights;}
+	public Set<Flight> getFlights(){return flights;}
 
 //	public void setFlights(List<Flight> flights){
 //		this.flights=flights;

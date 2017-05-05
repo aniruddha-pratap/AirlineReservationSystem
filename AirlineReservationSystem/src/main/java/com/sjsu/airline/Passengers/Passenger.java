@@ -30,7 +30,14 @@ public class Passenger {
 	@JsonManagedReference
 	private List<Reservation> reservation;
 
-	@ManyToMany(mappedBy="passengers", cascade=CascadeType.ALL)
+	/*@ManyToMany(mappedBy="passengers", cascade=CascadeType.ALL)
+	@JsonManagedReference
+	private List<Flight> flight;*/
+
+
+	@ManyToMany(cascade=javax.persistence.CascadeType.ALL)
+	@JoinTable(name="flight_passenger", joinColumns= {@JoinColumn(name="passenger_id")},
+			inverseJoinColumns = {@JoinColumn(name="flight_number")})
 	@JsonManagedReference
 	private List<Flight> flight;
 

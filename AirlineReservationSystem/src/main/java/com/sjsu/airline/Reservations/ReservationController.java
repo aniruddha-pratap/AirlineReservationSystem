@@ -23,10 +23,12 @@ public class ReservationController {
         return reservationService.makeReservation(passengerID,flightLists);
     }
 
-//    @GetMapping(value="/")
-//    public Reservation searchReservation(@RequestParam(value = "passengerId") int passengerID,@RequestParam(value="from") String from, @RequestParam(value="to") String to,
-//                                         @RequestParam(value="flightNumber") String flightNumber){
-//
-//        return reservationService.searchReservation(passengerID,from,to,flightNumber);
-//    }
+    @GetMapping(value="/")
+    public List<Reservation> searchReservation(@RequestParam(value = "passengerId") int passengerID,
+                                         @RequestParam(value="from") String from,
+                                         @RequestParam(value="to") String to,
+                                         @RequestParam(value="flightNumber") String flightNumber){
+        System.out.println("Trying to find passenger ID :"+passengerID+"\n\n\n");
+        return reservationService.searchReservation(passengerID,from,to,flightNumber);
+    }
 }

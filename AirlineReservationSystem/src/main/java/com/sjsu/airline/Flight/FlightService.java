@@ -47,7 +47,7 @@ public class FlightService {
                 System.out.println("Passenger is null in Flight Service");
             List<Reservation> reservations=passenger.getReservation();
             for(Reservation reservation:reservations){
-                List<Flight> bookedFlights=reservation.getFlights();
+                Set<Flight> bookedFlights=reservation.getFlights();
                 for(Flight bookedFlight:bookedFlights){
                     if(bookedFlight != presentFlight){
                         List<Date> reservedTiming=new ArrayList<>();

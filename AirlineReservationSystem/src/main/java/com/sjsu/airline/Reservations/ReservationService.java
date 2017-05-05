@@ -88,29 +88,29 @@ public class ReservationService {
         return reservation;
     }
 
-//    public List<Reservation> searchReservation(int passengerID, String from, String to, String flightNumber) {
-//        List<Reservation> searchResults=new ArrayList<>();
-//        List<Reservation> reservationByPassengerID=reservationRepository.findByPassengerId(passengerID);
-////        List<Reservation> reservationByFrom=reservationRepository.findByFrom(from);
-////        List<Reservation> reservationByTo=reservationRepository.fingByTo(to);
-////        List<Reservation> reservationByFlightNumber=reservationRepository.findByFlightNumber(flightNumber);
-//
-////        for(Reservation reservation:reservationByFlightNumber){
-////            searchResults.add(reservation);
-////        }
-////        for(Reservation reservation:reservationByFrom){
-////            searchResults.add(reservation);
-////        }
-//
-//        for(Reservation reservation:reservationByPassengerID){
+    public List<Reservation> searchReservation(int passengerID, String from, String to, String flightNumber) {
+        List<Reservation> searchResults=new ArrayList<>();
+        List<Reservation> reservationByPassengerID=reservationRepository.findByPassengerId(passengerID);
+//        List<Reservation> reservationByFrom=reservationRepository.findByFrom(from);
+//        List<Reservation> reservationByTo=reservationRepository.fingByTo(to);
+//        List<Reservation> reservationByFlightNumber=reservationRepository.findByFlightNumber(flightNumber);
+
+//        for(Reservation reservation:reservationByFlightNumber){
 //            searchResults.add(reservation);
 //        }
-//
-////        for(Reservation reservation:reservationByTo){
-////            searchResults.add(reservation);
-////        }
-//
-//
-//        return searchResults;
-//    }
+//        for(Reservation reservation:reservationByFrom){
+//            searchResults.add(reservation);
+//        }
+
+        for(Reservation reservation:reservationByPassengerID){
+            searchResults.add(reservation);
+        }
+
+//        for(Reservation reservation:reservationByTo){
+//            searchResults.add(reservation);
+//        }
+
+
+        return searchResults;
+    }
 }
