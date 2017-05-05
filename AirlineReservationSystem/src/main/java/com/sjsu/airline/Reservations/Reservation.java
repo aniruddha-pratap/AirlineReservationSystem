@@ -23,12 +23,16 @@ public class Reservation {
 
 	private int price;
 
-	@ManyToOne(fetch= FetchType.EAGER, cascade=CascadeType.ALL)
+	@ManyToOne(cascade=CascadeType.ALL)
 	@JoinColumn(name="passenger_id")
 	@JsonBackReference
 	private Passenger passenger;
 
-	@ManyToMany(mappedBy="reservation", fetch= FetchType.EAGER, cascade=CascadeType.ALL)
+	/*@ManyToMany(mappedBy="reservation", fetch= FetchType.EAGER, cascade=CascadeType.ALL)
+	@JsonManagedReference*/
+	@ManyToMany(fetch= FetchType.EAGER, cascade=CascadeType.ALL)
+	@JoinTable(name="reservation_flight", joinColumns= {@JoinColumn(name="order_number")},
+			inverseJoinColumns = {@JoinColumn(name="flight_number")})
 	@JsonManagedReference
 	private List<Flight> flights=new ArrayList<>();
 

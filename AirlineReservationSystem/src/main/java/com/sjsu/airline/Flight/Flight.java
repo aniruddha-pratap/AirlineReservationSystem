@@ -34,15 +34,20 @@ public class Flight {
 	@Embedded
 	private Plane plane=new Plane();
 
-	@ManyToMany(cascade=javax.persistence.CascadeType.ALL)
+	/*@ManyToMany(cascade=javax.persistence.CascadeType.ALL)
 	@JoinTable(
 			name="flight_reservation",
 			joinColumns = {@JoinColumn(name = "flight_number")},inverseJoinColumns = {@JoinColumn(name="order_number")}
 	)
+	@JsonBackReference*/
+	@ManyToMany(mappedBy = "flights",fetch= FetchType.EAGER, cascade=javax.persistence.CascadeType.ALL)
+	//@JoinColumn(name="order_number")
 	@JsonBackReference
 	private List<Reservation> reservation;
 
-	@ManyToMany(fetch= FetchType.EAGER, cascade=javax.persistence.CascadeType.ALL)
+	
+	
+	@ManyToMany(cascade=javax.persistence.CascadeType.ALL)
 	@JoinColumn(name="passenger_id")
 	@JsonBackReference
 	private List<Passenger> passengers;

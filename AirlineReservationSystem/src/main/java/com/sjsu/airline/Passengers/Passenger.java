@@ -26,7 +26,7 @@ public class Passenger {
 	@Column(unique=true)
 	private String phone;
 
-	@OneToMany(mappedBy="passenger", fetch= FetchType.EAGER, cascade=CascadeType.ALL)
+	@OneToMany(mappedBy="passenger", cascade=CascadeType.ALL)
 	@JsonManagedReference
 	private List<Reservation> reservation;
 
