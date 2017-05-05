@@ -150,4 +150,10 @@ public class Flight {
 	public List<Reservation> getReservation(){
 		return this.reservation;
 	}
+
+    public boolean conflict(Flight flight) {
+		if(this.getArrivalTime().compareTo(flight.getDepartureTime())<0||this.getDepartureTime().compareTo(flight.getArrivalTime())>0)
+			return false;
+		return true;
+    }
 }

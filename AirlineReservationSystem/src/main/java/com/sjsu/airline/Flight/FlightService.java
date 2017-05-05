@@ -47,22 +47,25 @@ public class FlightService {
 
         Flight presentFlight=flightRepository.getOne(flight.getNumber());
         List<Passenger> passengers=presentFlight.getPassengers();
+        if(passengers==null) {
+            System.out.println(" No passengers found for flight. Updating/Saving it now");
+            return flight;
+        }
 
         List<Date> newTiming=new ArrayList<>();
-        newTiming.add(flight.getArrivalTime());
         newTiming.add(flight.getDepartureTime());
+        newTiming.add(flight.getArrivalTime());
+
 
         for(Passenger passenger:passengers){
-            if(passenger==null)
-                System.out.println("Passenger is null in Flight Service");
             List<Reservation> reservations=passenger.getReservation();
             for(Reservation reservation:reservations){
                 Set<Flight> bookedFlights=reservation.getFlights();
                 for(Flight bookedFlight:bookedFlights){
                     if(bookedFlight != presentFlight){
                         List<Date> reservedTiming=new ArrayList<>();
-                        reservedTiming.add(bookedFlight.getArrivalTime());
                         reservedTiming.add(bookedFlight.getDepartureTime());
+                        reservedTiming.add(bookedFlight.getArrivalTime());
                         if(overlap(newTiming,reservedTiming))
                             return null;
                     }

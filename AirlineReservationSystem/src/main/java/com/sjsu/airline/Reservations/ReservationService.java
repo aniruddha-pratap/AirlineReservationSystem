@@ -47,7 +47,6 @@ public class ReservationService {
             return null;
         }
 
-
         System.out.println("List of flights------:"+flightLists+"\n\n\n");
         for(String flightId : flightLists){
             Flight flight=flightService.getFlight(flightId);
@@ -56,24 +55,36 @@ public class ReservationService {
                 return null;
             }
             cost+=flight.getPrice();
-            if(flightService.addPassenger(flight,passenger)==null) return null;
             flightsToBeReserved.add(flight);
         }
 
+        for(int i=0;i<flightsToBeReserved.size();i++){
+            for(int j=i+1;j<flightsToBeReserved.size();j++){
+                if(flightsToBeReserved.get(i).conflict(flightsToBeReserved.get(j)))
+                {
+                    System.out.println("Conflict while reserving flight :"+flightsToBeReserved.get(i).toString()+"\n\nand\n\n"+flightsToBeReserved.get(j).toString());
+                    return null;
+                }
+            }
+            List<Reservation> otherReservations=passenger.getReservation();
+            for(Reservation reservation:otherReservations){
+                if(overlap(reservation,flightsToBeReserved.get(i)))
+                    return null;
+            }
+            if(flightService.addPassenger(flightsToBeReserved.get(i),passenger)==null) return null;
+        }
+
         Reservation reservation=new Reservation();
+
         for(Flight flight:flightsToBeReserved){
             System.out.println("Flight :"+flight+" \n\n");
             reservation.addFlight(flight);
         }
+
         reservation.setPassenger(passenger);
         reservation.setPrice(cost);
 
         System.out.println("Passenger who booked this reservation :"+reservation.getPassenger().getFirstname());
-
-//        for(Flight flight:flightsToBeReserved){
-//            flightService.setReservation(flight,reservation);
-//        }
-//        passengerService.addReservation(passenger,reservation);
 
         try {
             reservationRepository.save(reservation);
@@ -121,6 +132,7 @@ public class ReservationService {
         return true;
     }
 
+
     public boolean addFlights(Integer id, List<String> flightsAdded) {
         Reservation reservation=reservationRepository.getReservation(id);
         if(reservation==null) return false;
@@ -129,7 +141,16 @@ public class ReservationService {
             Flight flight=flightService.getFlight(flightNumber);
             if(flight==null)
                 return false;
-            reservation.addFlight(flight);
+            if(!overlap(reservation,flight)) {
+                List<Reservation> otherReservations=reservation.getPassenger().getReservation();
+                for(Reservation otherReservation:otherReservations){
+                    if(overlap(otherReservation,flight))
+                        return false;
+                }
+                reservation.addFlight(flight);
+            }
+            else
+                return false;
         }
         try {
             reservationRepository.save(reservation);
@@ -138,6 +159,17 @@ public class ReservationService {
             e.printStackTrace();
             return false;
         }
+        return true;
+    }
+
+    private boolean overlap(Reservation reservation, Flight flight) {
+        Set<Flight> flights=reservation.getFlights();
+
+        for(Flight bookedFlight:flights){
+            if(bookedFlight.conflict(flight))
+                return false;
+        }
+
         return true;
     }
 
