@@ -10,9 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.FieldRetrievingFactoryBean;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by Vivek Agarwal on 5/2/2017.
@@ -104,7 +102,7 @@ public class ReservationService {
     public boolean deleteReservation(Integer id) {
         try {
             Reservation reservation=reservationRepository.findOne(id);
-            List<Flight> reservedFlights=reservation.getFlights();
+            Set<Flight> reservedFlights=reservation.getFlights();
             Flight flights[]=new Flight[reservedFlights.size()];
             int i=0;
             for(Flight flight:reservedFlights)
@@ -121,5 +119,54 @@ public class ReservationService {
             return false;
         }
         return true;
+    }
+
+    public boolean addFlights(Integer id, List<String> flightsAdded) {
+        Reservation reservation=reservationRepository.getReservation(id);
+        if(reservation==null) return false;
+
+        for(String flightNumber:flightsAdded){
+            Flight flight=flightService.getFlight(flightNumber);
+            if(flight==null)
+                return false;
+            reservation.addFlight(flight);
+        }
+        try {
+            reservationRepository.save(reservation);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
+
+
+    public boolean removeFlights(Integer id, List<String> flightsRemoved) {
+        Reservation reservation=reservationRepository.getReservation(id);
+        if(reservation==null) return false;
+        Set<Flight> bookedFlights=reservation.getFlights();
+
+        for(String flightNumber:flightsRemoved){
+            Flight flight=flightService.getFlight(flightNumber);
+            if(flight==null || !bookedFlights.contains(flight))
+                return false;
+            bookedFlights.remove(flight);
+        }
+
+        try {
+            reservationRepository.save(reservation);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean carefulAddAndRemove(Integer id, List<String> flightsAdded, List<String> flightsRemoved) {
+
+        return false;
     }
 }
