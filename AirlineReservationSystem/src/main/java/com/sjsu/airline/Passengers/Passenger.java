@@ -17,7 +17,7 @@ public class Passenger {
 	@Id
 	@GeneratedValue
 	@Column(name="passenger_id")
-	private int passenger_id;
+	private int id;
 	private String firstname;
 	private String lastname;
 	private int age;
@@ -46,10 +46,10 @@ public class Passenger {
 	}
 
 	public int getPassengerId() {
-		return passenger_id;
+		return id;
 	}
 	public void setPassengerId(int id) {
-		this.passenger_id = id;
+		this.id = id;
 	}
 	public String getFirstname() {
 		return firstname;
