@@ -5,6 +5,7 @@ import java.util.UUID;
 
 import com.sjsu.airline.Flight.Flight;
 import com.sjsu.airline.Reservations.Reservation;
+import com.sjsu.airline.Reservations.ReservationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.sjsu.airline.repositories.PassengerRepository;
@@ -14,7 +15,9 @@ public class PassengerService {
 
 	@Autowired
 	private PassengerRepository passengerRepository;
-	
+	@Autowired
+	private ReservationService reservationService;
+
 	public Passenger getPassenger(int id){
 		return passengerRepository.findOne(id);
 	}
@@ -32,8 +35,35 @@ public class PassengerService {
 		return pass;
 	}
 	
-	public void deletePassenger(int id){
-		passengerRepository.delete(id);
+	public boolean deletePassenger(int id){
+		Passenger passenger=passengerRepository.findOne(id);
+		if(passenger==null)
+			return false;
+
+		List<Reservation> reservations=passenger.getReservation();
+
+		Reservation reserves[]=new Reservation[reservations.size()];
+		int i=0;
+
+		for(Reservation res:reservations)
+			reserves[i++]=res;
+
+		try {
+			for (int j=0;j<reserves.length;j++) {
+				reservationService.deleteReservation(reserves[j].getOrderNumber());
+			}
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+		try {
+			passengerRepository.delete(id);
+		}
+		catch (Exception e){
+			e.printStackTrace();
+			return false;
+		}
+		return true;
 	}
 	
 	public Passenger updatePassenger(int id, String firstName, String lastName, int age, String gender, String phone){

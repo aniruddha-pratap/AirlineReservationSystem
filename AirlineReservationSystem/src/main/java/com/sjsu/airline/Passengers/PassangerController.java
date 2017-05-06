@@ -105,9 +105,16 @@ public class PassangerController {
 		return new ResponseEntity(resultMap, HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/{id}")
-	public List<Passenger> deletePassenger(@PathVariable int id){
-		passengerService.deletePassenger(id);
+	@DeleteMapping("/{id}") //Check for Success code.
+	public List<Passenger> deletePassenger(@PathVariable int id) throws SpecialException {
+		;
+		if(!passengerService.deletePassenger(id))
+		{
+			SpecialException e = new SpecialException();
+			e.setCode(404);
+			e.setMessage("Passenger with id "+ id+ " does not exist");
+			throw e;
+		}
 		return passengerService.getAllPassengers();
 	}
 	

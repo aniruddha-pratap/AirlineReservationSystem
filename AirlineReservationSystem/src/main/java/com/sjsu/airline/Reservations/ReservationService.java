@@ -139,6 +139,7 @@ public class ReservationService {
                 reservationRepository.delete((int) id);
             }catch (Exception e){
                 e.printStackTrace();
+                return false;
             }
         }
         catch (Exception e){
