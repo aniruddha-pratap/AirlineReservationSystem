@@ -40,16 +40,17 @@ public class Flight {
 			joinColumns = {@JoinColumn(name = "flight_number")},inverseJoinColumns = {@JoinColumn(name="order_number")}
 	)
 	@JsonBackReference*/
-	@ManyToMany(mappedBy = "flights",fetch= FetchType.EAGER, cascade=javax.persistence.CascadeType.ALL)
+	@ManyToMany(mappedBy = "flights",fetch= FetchType.EAGER)
 	//@JoinColumn(name="order_number")
 	@JsonBackReference
 	private List<Reservation> reservation;
 
 	
 	
-	@ManyToMany(cascade=javax.persistence.CascadeType.ALL)
-	@JoinColumn(name="passenger_id")
-	@JsonBackReference
+	@ManyToMany
+	@JoinTable(name="flight_passengers", joinColumns= {@JoinColumn(name="flight_number")},
+	inverseJoinColumns = {@JoinColumn(name="passenger_id")})
+	@JsonManagedReference
 	private List<Passenger> passengers;
 
 	public Plane getPlane() {
