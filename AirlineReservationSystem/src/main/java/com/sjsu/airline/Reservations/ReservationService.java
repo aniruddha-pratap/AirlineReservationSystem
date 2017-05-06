@@ -68,10 +68,15 @@ public class ReservationService {
             }
             List<Reservation> otherReservations=passenger.getReservation();
             for(Reservation reservation:otherReservations){
-                if(overlap(reservation,flightsToBeReserved.get(i)))
+                if(overlap(reservation,flightsToBeReserved.get(i))) {
+                    System.out.println("Rservation conflict with other reservation :"+reservation.toString());
                     return null;
+                }
             }
-            if(flightService.addPassenger(flightsToBeReserved.get(i),passenger)==null) return null;
+            if(flightService.addPassenger(flightsToBeReserved.get(i),passenger)==null) {
+                System.out.println("Unable to add passenger to flight :"+flightsToBeReserved.get(i).toString());
+                return null;
+            }
         }
 
         Reservation reservation=new Reservation();
@@ -123,7 +128,13 @@ public class ReservationService {
                 flight.setSeatsLeft(flight.getSeatsLeft()+1);
                 flightService.save(flight);
             }
-            reservationRepository.delete(id);
+
+            try {
+                System.out.println("Deleting Reservation now.. \n\n\n");
+                reservationRepository.delete((int) id);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
         }
         catch (Exception e){
             e.printStackTrace();
@@ -166,11 +177,13 @@ public class ReservationService {
         Set<Flight> flights=reservation.getFlights();
 
         for(Flight bookedFlight:flights){
-            if(bookedFlight.conflict(flight))
-                return false;
+            if(bookedFlight.conflict(flight)) {
+             System.out.println("Conflict between flight \n\n"+flight.toString()+" \n\nand \n\n"+bookedFlight.toString());
+                return true;
+            }
         }
 
-        return true;
+        return false;
     }
 
 
@@ -195,10 +208,5 @@ public class ReservationService {
         }
 
         return true;
-    }
-
-    public boolean carefulAddAndRemove(Integer id, List<String> flightsAdded, List<String> flightsRemoved) {
-
-        return false;
     }
 }
