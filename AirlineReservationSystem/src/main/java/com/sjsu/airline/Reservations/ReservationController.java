@@ -71,7 +71,7 @@ public class ReservationController {
 
     @DeleteMapping(value = "/{id}")
     public boolean deleteReservation(@PathVariable Integer id) throws SpecialException {
-    	reservationService.deleteReservation(id);
+    	//reservationService.deleteReservation(id);
         if(!reservationService.deleteReservation(id)){
             SpecialException e = new SpecialException();
             e.setCode(404);

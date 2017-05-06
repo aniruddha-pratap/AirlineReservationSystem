@@ -113,6 +113,14 @@ public class FlightService {
 
     public boolean deleteFlight(String id) {
         try {
+            Flight flight=flightRepository.findOne(id);
+            if(flight==null){
+                System.out.println("Flight with id :"+id+" does not exist.");
+                return false;
+            }
+            System.out.println("Flight passengers :"+flight.getPassengers());
+            if(flight.getPassengers()!=null && flight.getPassengers().size()>0)
+                return false;
             flightRepository.delete(id);
             return true;
         }

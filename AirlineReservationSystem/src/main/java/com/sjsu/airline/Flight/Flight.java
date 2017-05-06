@@ -47,7 +47,7 @@ public class Flight {
 
 	
 	
-	@ManyToMany
+	@ManyToMany(cascade = javax.persistence.CascadeType.REFRESH)
 	@JoinTable(name="flight_passengers", joinColumns= {@JoinColumn(name="flight_number")},
 	inverseJoinColumns = {@JoinColumn(name="passenger_id")})
 	@JsonManagedReference
@@ -157,4 +157,14 @@ public class Flight {
 			return false;
 		return true;
     }
+
+	public void removePassenger(Passenger passenger) {
+		for(int i=0;i<this.passengers.size();i++){
+			if(this.passengers.get(i).equals(passenger)) {
+				this.passengers.remove(i);
+				this.setSeatsLeft(this.getSeatsLeft()+1);
+				break;
+			}
+		}
+	}
 }

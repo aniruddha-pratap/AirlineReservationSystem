@@ -96,7 +96,7 @@ public class FlightController {
         if(!flightService.deleteFlight(id)){
             SpecialException e = new SpecialException();
             e.setCode(404);
-            e.setMessage("Could not delete flight. Please ensure flight id is correct");
+            e.setMessage("Could not delete flight. Please ensure flight id is correct and no passengers have booked this flight.");
             throw e;
         }
         return true;

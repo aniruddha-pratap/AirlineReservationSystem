@@ -117,7 +117,11 @@ public class ReservationService {
 
     public boolean deleteReservation(Integer id) {
         try {
-            Reservation reservation=reservationRepository.findOne(id);
+            Reservation reservation=reservationRepository.findOne((int)id);
+            if(reservation==null){
+                System.out.println("Reservation with id :"+id+" does not exist!");
+                return false;
+            }
             Set<Flight> reservedFlights=reservation.getFlights();
             Flight flights[]=new Flight[reservedFlights.size()];
             int i=0;
@@ -125,7 +129,8 @@ public class ReservationService {
                 flights[i++]=flight;
 
             for(Flight flight:flights){
-                flight.setSeatsLeft(flight.getSeatsLeft()+1);
+                flight.removePassenger(reservation.getPassenger());
+//                flight.setSeatsLeft(flight.getSeatsLeft()+1);
                 flightService.save(flight);
             }
 
