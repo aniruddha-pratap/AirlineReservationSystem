@@ -164,11 +164,14 @@ public class ReservationService {
                     if(overlap(otherReservation,flight))
                         return false;
                 }
+                flight.setSeatsLeft(flight.getSeatsLeft()-1);
+                reservation.setPrice(reservation.getPrice()+flight.getPrice());
                 reservation.addFlight(flight);
             }
             else
                 return false;
         }
+
         try {
             reservationRepository.save(reservation);
         }
@@ -196,13 +199,17 @@ public class ReservationService {
     public boolean removeFlights(Integer id, List<String> flightsRemoved) {
         Reservation reservation=reservationRepository.getReservation(id);
         if(reservation==null) return false;
+
         Set<Flight> bookedFlights=reservation.getFlights();
 
         for(String flightNumber:flightsRemoved){
+
             Flight flight=flightService.getFlight(flightNumber);
             if(flight==null || !bookedFlights.contains(flight))
                 return false;
+            flight.setSeatsLeft(flight.getSeatsLeft()+1);
             bookedFlights.remove(flight);
+            reservation.setPrice(reservation.getPrice()-flight.getPrice());
         }
 
         try {
@@ -214,5 +221,18 @@ public class ReservationService {
         }
 
         return true;
+    }
+
+    public boolean bookedFight(Integer id, String flightId) {
+        Reservation reservation=reservationRepository.findOne(id);
+
+        Flight flight=flightService.getFlight(flightId);
+        if(reservation==null || flight==null)
+            return false;
+
+        Set<Flight> bookedFlights=reservation.getFlights();
+        if(bookedFlights.contains(flight))
+            return true;
+        return false;
     }
 }

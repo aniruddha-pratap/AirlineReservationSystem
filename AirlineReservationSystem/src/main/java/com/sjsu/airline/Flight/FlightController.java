@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
@@ -53,8 +55,8 @@ public class FlightController {
                                       @RequestParam(value="price") int price,
                                       @RequestParam(value="from") String from,
                                       @RequestParam(value="to") String to,
-                                      @RequestParam(value="departureTime") Date departureTime,
-                                      @RequestParam(value="arrivalTime") Date arrivalTime,
+                                      @RequestParam(value="departureTime") String departureTime,
+                                      @RequestParam(value="arrivalTime") String arrivalTime,
                                       @RequestParam(value="description") String description,
                                       @RequestParam(value="capacity") int capacity,
                                       @RequestParam(value="model") String model,
@@ -64,12 +66,22 @@ public class FlightController {
 
         Flight flight=new Flight();
 
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH");
+        Date dep = null, arr = null;
+        try{
+            dep = formatter.parse(departureTime);
+            arr = formatter.parse(arrivalTime);
+        }
+        catch (Exception e) {
+            System.out.println("Error Date Format:"+e);
+        }
+
         flight.setNumber(id);
         flight.setPrice(price);
         flight.setFromSource(from);
         flight.setToDestination(to);
-        flight.setDepartureTime(departureTime);
-        flight.setArrivalTime(arrivalTime);
+        flight.setDepartureTime(dep);
+        flight.setArrivalTime(arr);
         flight.setDescription(description);
         flight.setCapacity(capacity);
         flight.setSeatsLeft(capacity);

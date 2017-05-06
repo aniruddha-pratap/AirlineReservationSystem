@@ -49,6 +49,7 @@ public class FlightService {
         List<Passenger> passengers=presentFlight.getPassengers();
         if(passengers==null) {
             System.out.println(" No passengers found for flight. Updating/Saving it now");
+            flightRepository.save(flight);//solved
             return flight;
         }
 
@@ -142,5 +143,12 @@ public class FlightService {
 
     public void setReservation(Flight flight,Reservation reservation) {
         flight.setReservation(reservation);
+    }
+
+    public boolean exists(String flightId) {
+        Flight flight=flightRepository.findOne(flightId);
+        if(flight==null)
+            return false;
+        return true;
     }
 }

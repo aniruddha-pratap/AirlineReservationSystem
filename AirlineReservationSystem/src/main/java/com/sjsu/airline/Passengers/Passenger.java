@@ -33,7 +33,7 @@ public class Passenger {
 
 	@ManyToMany(mappedBy="passengers")
 	@JsonBackReference
-	private List<Flight> flight;
+	private Set<Flight> flight;
 
 	public Passenger(){
 

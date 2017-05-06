@@ -134,6 +134,7 @@ public class PassangerController {
 			jsonO.put("gender", passenger.getGender());
 			jsonO.put("phone", passenger.getPhone());
 			List<Reservation> reservations = passenger.getReservation();
+			System.out.println("Reservations in passeneger " + reservations.size());
 			List<JSONObject> reservationList = new ArrayList<JSONObject>();
 			if(reservations != null){
 				for(Reservation reservation:reservations){

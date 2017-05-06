@@ -2,6 +2,7 @@ package com.sjsu.airline.Reservations;
 
 import com.sjsu.airline.Exception.SpecialException;
 import com.sjsu.airline.Flight.Flight;
+import com.sjsu.airline.Flight.FlightService;
 import com.sjsu.airline.Passengers.Passenger;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -26,6 +27,8 @@ public class ReservationController {
 
     @Autowired
     private ReservationService reservationService;
+    @Autowired
+    private FlightService flightService;
 
     @GetMapping(value="/{id}")
     public ResponseEntity getReservation(@PathVariable int id) throws SpecialException {
@@ -100,6 +103,25 @@ public class ReservationController {
             throw e;
         }
 
+        boolean removal=false;
+        if(flightsRemoved!=null){
+            for(String flightId:flightsRemoved){
+                if(!flightService.exists(flightId)){
+                    SpecialException e = new SpecialException();
+                    e.setCode(404);
+                    e.setMessage("Could not remove flight from reservation. The flight id "+flightId+" does not exist.");
+                    throw e;
+                }
+                if(!reservationService.bookedFight(id,flightId)){
+                    SpecialException e = new SpecialException();
+                    e.setCode(404);
+                    e.setMessage("Could not remove flight from reservation. The flight id "+flightId+" is not reserved.");
+                    throw e;
+                }
+            }
+        }
+
+
         if (flightsAdded != null) {
             if (!reservationService.addFlights(id, flightsAdded)){
                 SpecialException e = new SpecialException();
@@ -107,15 +129,27 @@ public class ReservationController {
                 e.setMessage("Could not add flights to reservation. Please check for conflicts before retrying");
                 throw e;
             }
-        }
-        if (flightsRemoved != null) {
-            if (!reservationService.removeFlights(id, flightsRemoved)){
-                SpecialException e = new SpecialException();
-                e.setCode(404);
-                e.setMessage("Could not remove flights from reservation.");
-                throw e;
+            if (flightsRemoved != null) {
+                if (!reservationService.removeFlights(id, flightsRemoved)){
+                    SpecialException e = new SpecialException();
+                    e.setCode(404);
+                    e.setMessage("Could not remove flights from reservation.");
+                    throw e;
+                }
             }
         }
+        else{
+            if (flightsRemoved != null) {
+                if (!reservationService.removeFlights(id, flightsRemoved)){
+                    SpecialException e = new SpecialException();
+                    e.setCode(404);
+                    e.setMessage("Could not remove flights from reservation.");
+                    throw e;
+                }
+            }
+        }
+
+
         JSONObject res_Object = formatReservation(reservationService.getReservation(id));
         return new ResponseEntity(res_Object.toString(), HttpStatus.OK);
     }

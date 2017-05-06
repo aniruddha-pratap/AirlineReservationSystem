@@ -12,6 +12,7 @@ import com.sjsu.airline.Plane.Plane;
 import com.sjsu.airline.Reservations.Reservation;
 import org.hibernate.annotations.*;
 import org.hibernate.annotations.CascadeType;
+import org.springframework.format.annotation.DateTimeFormat;
 
 @Entity
 @Table(name="flight")
@@ -23,7 +24,11 @@ public class Flight {
 	private int price;
 	private String fromSource;
 	private String toDestination;
+
+	@DateTimeFormat(pattern="yyyy-MM-dd-HH")
 	private Date departureTime;
+	@DateTimeFormat(pattern="yyyy-MM-dd-HH")
+
 	private Date arrivalTime;
 	private int seatsLeft;
 	private String description;
