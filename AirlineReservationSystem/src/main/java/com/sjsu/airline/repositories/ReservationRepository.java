@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
+@Transactional
 public interface ReservationRepository extends JpaRepository<Reservation, Integer>{
 
     List<Reservation> findByPassengerId(int passenger_id);

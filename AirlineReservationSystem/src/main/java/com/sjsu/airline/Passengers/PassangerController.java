@@ -69,107 +69,8 @@ public class PassangerController {
 		//return ResponseEntity.ok(res.toString());
 	}
 		
-	public JSONObject passengerXML(Passenger passenger){
-		JSONObject resut_json = new JSONObject();
-		try{
-			JSONObject jsonO = new JSONObject(passengerFormat(passenger));
-			Field map = jsonO.getClass().getDeclaredField("map");
-			map.setAccessible(true);//because the field is private final...
-			map.set(jsonO, new LinkedHashMap<>());
-			map.setAccessible(false);//return flag
-			jsonO.put("id", passenger.getPassengerId());
-			jsonO.put("firstname", passenger.getFirstname());
-			jsonO.put("lastname", passenger.getLastname());
-			jsonO.put("age", passenger.getAge());
-			jsonO.put("gender", passenger.getGender());
-			jsonO.put("phone", passenger.getPhone());
-			List<Reservation> reservations = passenger.getReservation();
-			List<JSONObject> reservationList = new ArrayList<JSONObject>();
-			for(Reservation reservation:reservations){
-				JSONObject reservationObject = new JSONObject();
-				Field iMap = reservationObject.getClass().getDeclaredField("map");
-				iMap.setAccessible(true);//because the field is private final...
-				iMap.set(reservationObject, new LinkedHashMap<>());
-				iMap.setAccessible(false);//return flag
-				reservationObject.put("orderNumber", reservation.getOrderNumber());
-				reservationObject.put("price", reservation.getPrice());
-				List<JSONObject> flightList = new ArrayList<JSONObject>();
-				for(Flight flight: reservation.getFlights()){
-					JSONObject flightObj = new JSONObject();
-					Field fMap = flightObj.getClass().getDeclaredField("map");
-					fMap.setAccessible(true);//because the field is private final...
-					fMap.set(flightObj, new LinkedHashMap<>());
-					fMap.setAccessible(false);//return flag
-					flightObj.put("number", flight.getNumber());
-					flightObj.put("price", flight.getPrice());
-					flightObj.put("from", flight.getFromSource());
-					flightObj.put("to", flight.getToDestination());
-					flightObj.put("departureTime", flight.getDepartureTime());
-					flightObj.put("arrivalTime", flight.getArrivalTime());
-					flightObj.put("description", flight.getDescription());
-					JSONObject plane = new JSONObject();
-					Field pMap = plane.getClass().getDeclaredField("map");
-					fMap.setAccessible(true);//because the field is private final...
-					fMap.set(plane, new LinkedHashMap<>());
-					fMap.setAccessible(false);//return flag
-					plane.put("capacity", flight.getPlane().getCapacity());
-					plane.put("model", flight.getPlane().getModel());
-					plane.put("manufacturer", flight.getPlane().getManufacturer());
-					plane.put("yearOfManufacture", flight.getPlane().getYearOfManufacture());
-					flightObj.put("plane", plane);
-					JSONObject f =new JSONObject();
-					f.put("flight", flightObj);
-					flightList.add(f);
-				}
-				JSONObject resList = new JSONObject();
-				JSONArray flJsArray = new JSONArray(flightList);
-				reservationObject.put("flights", flJsArray);
-				resList.put("reservation", reservationObject);
-				reservationList.add(resList);
-			}
-			JSONArray resJsArray = new JSONArray(reservationList);
-			jsonO.put("reservations", resJsArray);
-			resut_json.put("passenger", jsonO);
-			
-		}catch(Exception e){
-			
-		}
-		return resut_json;
-	}
-
-	
-	public ModelMap passengerFormat(Passenger passenger){
-		ModelMap resultMap = new ModelMap();
-		resultMap.addAttribute("id", passenger.getPassengerId());
-		resultMap.addAttribute("firstname", passenger.getFirstname());
-		resultMap.addAttribute("lastname", passenger.getLastname());
-		resultMap.addAttribute("age", passenger.getAge());
-		resultMap.addAttribute("gender", passenger.getGender());
-		resultMap.addAttribute("phone", passenger.getPhone());
-		List<Reservation> reservations = passenger.getReservation();
-		List<ModelMap> reservationList = new ArrayList<ModelMap>();
-		for(Reservation reservation:reservations){
-			ModelMap reservationMap = new ModelMap();
-			reservationMap.addAttribute("orderNumber", reservation.getOrderNumber());
-			reservationMap.addAttribute("price", reservation.getPrice());
-			List<ModelMap> flightList = new ArrayList<ModelMap>();
-			for(Flight flight: reservation.getFlights()){
-				ModelMap flightMap = new ModelMap();
-				flightMap.addAttribute("flight", flight);
-				flightList.add(flightMap);
-			}
-			ModelMap resList = new ModelMap();
-			reservationMap.addAttribute("flights", flightList);
-			resList.addAttribute("reservation", reservationMap);
-			reservationList.add(resList);
-		}
-		resultMap.addAttribute("reservations", reservationList);
-		return resultMap;
-	}
-
-	
 	@PostMapping("/passenger")
-	public Passenger createPassenger(@RequestParam(value="firstname", required=true) String firstName, @RequestParam(value="lastname", required=true) String lastName, @RequestParam(value="age", required=true) int age, @RequestParam(value="gender", required=true) String gender, @RequestParam(value="phone", required=true) String phone) throws Exception{
+	public ResponseEntity createPassenger(@RequestParam(value="firstname", required=true) String firstName, @RequestParam(value="lastname", required=true) String lastName, @RequestParam(value="age", required=true) int age, @RequestParam(value="gender", required=true) String gender, @RequestParam(value="phone", required=true) String phone) throws Exception{
 		Passenger pa = new Passenger();
 		pa.setFirstname(firstName);
 		pa.setLastname(lastName);
@@ -184,11 +85,13 @@ public class PassangerController {
 			e.setMessage("Another person with same number already exists");
 			throw e;
 		}
-		return passengerService.createPassenger(pa);
+		ModelMap resultMap = new ModelMap();
+		resultMap.addAttribute("passenger", passengerFormat(pa));
+		return new ResponseEntity(resultMap, HttpStatus.OK);
 	}
 	
 	@PutMapping("/passenger/{id}")
-	public Passenger updatePassenger(@PathVariable int id, @RequestParam(value="firstname", required=true) String firstName, @RequestParam(value="lastname", required=true) String lastName, @RequestParam(value="age", required=true) int age, @RequestParam(value="gender", required=true) String gender, @RequestParam(value="phone", required=true) String phone) throws Exception{
+	public ResponseEntity updatePassenger(@PathVariable int id, @RequestParam(value="firstname", required=true) String firstName, @RequestParam(value="lastname", required=true) String lastName, @RequestParam(value="age", required=true) int age, @RequestParam(value="gender", required=true) String gender, @RequestParam(value="phone", required=true) String phone) throws Exception{
 		if(passengerService.updatePassenger(id, firstName, lastName, age, gender, phone) ==  null)
 		{
 			System.out.println("Inside update if");
@@ -197,7 +100,9 @@ public class PassangerController {
 			e.setMessage("Sorry the passenger could not be updated");
 			throw e;
 		}
-		return passengerService.updatePassenger(id, firstName, lastName, age, gender, phone);
+		ModelMap resultMap = new ModelMap();
+		resultMap.addAttribute("passenger", passengerFormat(passengerService.updatePassenger(id, firstName, lastName, age, gender, phone)));
+		return new ResponseEntity(resultMap, HttpStatus.OK);
 	}
 	
 	@DeleteMapping("/{id}")
@@ -205,4 +110,107 @@ public class PassangerController {
 		passengerService.deletePassenger(id);
 		return passengerService.getAllPassengers();
 	}
+	
+	public JSONObject passengerXML(Passenger passenger){
+		JSONObject resut_json = new JSONObject();
+		try{
+			JSONObject jsonO = new JSONObject(passengerFormat(passenger));
+			Field map = jsonO.getClass().getDeclaredField("map");
+			map.setAccessible(true);//because the field is private final...
+			map.set(jsonO, new LinkedHashMap<>());
+			map.setAccessible(false);//return flag
+			jsonO.put("id", Integer.toString(passenger.getPassengerId()));
+			jsonO.put("firstname", passenger.getFirstname());
+			jsonO.put("lastname", passenger.getLastname());
+			jsonO.put("age", Integer.toString(passenger.getAge()));
+			jsonO.put("gender", passenger.getGender());
+			jsonO.put("phone", passenger.getPhone());
+			List<Reservation> reservations = passenger.getReservation();
+			List<JSONObject> reservationList = new ArrayList<JSONObject>();
+			if(!reservations.isEmpty()){
+				for(Reservation reservation:reservations){
+					JSONObject reservationObject = new JSONObject();
+					Field iMap = reservationObject.getClass().getDeclaredField("map");
+					iMap.setAccessible(true);//because the field is private final...
+					iMap.set(reservationObject, new LinkedHashMap<>());
+					iMap.setAccessible(false);//return flag
+					reservationObject.put("orderNumber", reservation.getOrderNumber());
+					reservationObject.put("price", reservation.getPrice());
+					List<JSONObject> flightList = new ArrayList<JSONObject>();
+					for(Flight flight: reservation.getFlights()){
+						JSONObject flightObj = new JSONObject();
+						Field fMap = flightObj.getClass().getDeclaredField("map");
+						fMap.setAccessible(true);//because the field is private final...
+						fMap.set(flightObj, new LinkedHashMap<>());
+						fMap.setAccessible(false);//return flag
+						flightObj.put("number", flight.getNumber());
+						flightObj.put("price", flight.getPrice());
+						flightObj.put("from", flight.getFromSource());
+						flightObj.put("to", flight.getToDestination());
+						flightObj.put("departureTime", flight.getDepartureTime());
+						flightObj.put("arrivalTime", flight.getArrivalTime());
+						flightObj.put("description", flight.getDescription());
+						JSONObject plane = new JSONObject();
+						Field pMap = plane.getClass().getDeclaredField("map");
+						fMap.setAccessible(true);//because the field is private final...
+						fMap.set(plane, new LinkedHashMap<>());
+						fMap.setAccessible(false);//return flag
+						plane.put("capacity", flight.getPlane().getCapacity());
+						plane.put("model", flight.getPlane().getModel());
+						plane.put("manufacturer", flight.getPlane().getManufacturer());
+						plane.put("yearOfManufacture", flight.getPlane().getYearOfManufacture());
+						flightObj.put("plane", plane);
+						JSONObject f =new JSONObject();
+						f.put("flight", flightObj);
+						flightList.add(f);
+					}
+					JSONObject resList = new JSONObject();
+					JSONArray flJsArray = new JSONArray(flightList);
+					reservationObject.put("flights", flJsArray);
+					resList.put("reservation", reservationObject);
+					reservationList.add(resList);
+				}
+			}
+			JSONArray resJsArray = new JSONArray(reservationList);
+			jsonO.put("reservations", resJsArray);
+			resut_json.put("passenger", jsonO);
+		}catch(Exception e){
+			System.out.println(e);
+		}
+		return resut_json;
+	}
+
+	
+	public ModelMap passengerFormat(Passenger passenger){
+		ModelMap resultMap = new ModelMap();
+		resultMap.addAttribute("id", passenger.getPassengerId());
+		resultMap.addAttribute("firstname", passenger.getFirstname());
+		resultMap.addAttribute("lastname", passenger.getLastname());
+		resultMap.addAttribute("age", passenger.getAge());
+		resultMap.addAttribute("gender", passenger.getGender());
+		resultMap.addAttribute("phone", passenger.getPhone());
+		List<Reservation> reservations = new ArrayList<Reservation>();
+		reservations=passenger.getReservation();
+		List<ModelMap> reservationList = new ArrayList<ModelMap>();
+		if(reservations != null){
+			for(Reservation reservation:reservations){
+				ModelMap reservationMap = new ModelMap();
+				reservationMap.addAttribute("orderNumber", reservation.getOrderNumber());
+				reservationMap.addAttribute("price", reservation.getPrice());
+				List<ModelMap> flightList = new ArrayList<ModelMap>();
+				for(Flight flight: reservation.getFlights()){
+					ModelMap flightMap = new ModelMap();
+					flightMap.addAttribute("flight", flight);
+					flightList.add(flightMap);
+				}
+				ModelMap resList = new ModelMap();
+				reservationMap.addAttribute("flights", flightList);
+				resList.addAttribute("reservation", reservationMap);
+				reservationList.add(resList);
+			}
+		}
+		resultMap.addAttribute("reservations", reservationList);
+		return resultMap;
+	}
+	
 }
