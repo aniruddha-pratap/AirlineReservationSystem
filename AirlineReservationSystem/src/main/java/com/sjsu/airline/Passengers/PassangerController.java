@@ -55,8 +55,8 @@ public class PassangerController {
 			e.setMessage("Sorry! The requested passenger with id "+id+" does not exist");
 			throw e;
 		}
-		ModelMap resultMap = new ModelMap();
-		resultMap.addAttribute("passenger", passengerFormat(passengerService.getPassenger(id)));
+		//ModelMap resultMap = new ModelMap();
+		//resultMap.addAttribute("passenger", passengerFormat(passengerService.getPassenger(id)));
 		//Map<String, Object> m = format(passengerService.getPassenger(id)); 
 		JSONObject res_Object = passengerXML(passengerService.getPassenger(id));
 		//JSONObject res_Object = new JSONObject(resultMap);
@@ -65,7 +65,7 @@ public class PassangerController {
 			return new ResponseEntity(XML.toString(res_Object), HttpStatus.OK);
 		}
 		
-		return new ResponseEntity(resultMap, HttpStatus.OK);
+		return new ResponseEntity(res_Object.toString(), HttpStatus.OK);
 		//return ResponseEntity.ok(res.toString());
 	}
 		
@@ -114,6 +114,7 @@ public class PassangerController {
 	public JSONObject passengerXML(Passenger passenger){
 		JSONObject resut_json = new JSONObject();
 		try{
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH");
 			JSONObject jsonO = new JSONObject(passengerFormat(passenger));
 			Field map = jsonO.getClass().getDeclaredField("map");
 			map.setAccessible(true);//because the field is private final...
@@ -127,7 +128,7 @@ public class PassangerController {
 			jsonO.put("phone", passenger.getPhone());
 			List<Reservation> reservations = passenger.getReservation();
 			List<JSONObject> reservationList = new ArrayList<JSONObject>();
-			if(!reservations.isEmpty()){
+			if(reservations != null){
 				for(Reservation reservation:reservations){
 					JSONObject reservationObject = new JSONObject();
 					Field iMap = reservationObject.getClass().getDeclaredField("map");
@@ -147,8 +148,8 @@ public class PassangerController {
 						flightObj.put("price", flight.getPrice());
 						flightObj.put("from", flight.getFromSource());
 						flightObj.put("to", flight.getToDestination());
-						flightObj.put("departureTime", flight.getDepartureTime());
-						flightObj.put("arrivalTime", flight.getArrivalTime());
+						flightObj.put("departureTime", dateFormat.format(flight.getDepartureTime()));
+						flightObj.put("arrivalTime", dateFormat.format(flight.getArrivalTime()));
 						flightObj.put("description", flight.getDescription());
 						JSONObject plane = new JSONObject();
 						Field pMap = plane.getClass().getDeclaredField("map");
