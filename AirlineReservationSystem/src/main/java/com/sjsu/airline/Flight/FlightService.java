@@ -90,7 +90,15 @@ public class FlightService {
     }
 
     public List<Flight> getAllFlights() {
-        return flightRepository.findAll();
+        List<Flight> results=null;
+        try{
+            results=flightRepository.findAll();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+        return results;
     }
 
     public Flight getFlight(String id) {

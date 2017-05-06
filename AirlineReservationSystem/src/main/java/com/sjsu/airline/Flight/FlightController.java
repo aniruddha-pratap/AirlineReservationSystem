@@ -3,6 +3,7 @@
 
 package com.sjsu.airline.Flight;
 
+import com.sjsu.airline.Exception.SpecialException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,14 +23,29 @@ public class FlightController {
     private FlightService flightService;
 
     @GetMapping(value = "/allFlights")
-    public List<Flight> getAllFlights(@RequestParam(value="xml") String xml){
-        return flightService.getAllFlights();
+    public List<Flight> getAllFlights(@RequestParam(value="xml") String xml) throws SpecialException {
+
+        List<Flight> results= flightService.getAllFlights();
+        if(results==null){
+            SpecialException e = new SpecialException();
+            e.setCode(404);
+            e.setMessage("Could not find flights.");
+            throw e;
+        }
+        return results;
     }
 
     @GetMapping(value = "/{id}")
-    public Flight getFlight(@PathVariable String id){
-        System.out.println("Request for flight "+id);
-        return flightService.getFlight(id);
+    public Flight getFlight(@PathVariable String id) throws SpecialException {
+
+        Flight flightResult= flightService.getFlight(id);
+        if(flightResult==null){
+            SpecialException e = new SpecialException();
+            e.setCode(404);
+            e.setMessage("No flight detected for id "+id);
+            throw e;
+        }
+        return flightResult;
     }
 
     @PostMapping(value="/{id}")
@@ -44,7 +60,7 @@ public class FlightController {
                                       @RequestParam(value="model") String model,
                                       @RequestParam(value="manufacturer") String manufacturer,
                                       @RequestParam(value="yearOfManufacture") int yearOfManufacture
-                                      ){
+                                      ) throws SpecialException {
 
         Flight flight=new Flight();
 
@@ -63,11 +79,26 @@ public class FlightController {
 
         System.out.println(flight.toString());
 
-        return flightService.saveOrUpdateFlight(flight);
+        Flight flightResult= flightService.saveOrUpdateFlight(flight);
+
+        if(flightResult==null){
+            SpecialException e = new SpecialException();
+            e.setCode(404);
+            e.setMessage("Could not update flight. Please ensure flight exists and check for overlap.");
+            throw e;
+        }
+        return flightResult;
     }
 
     @DeleteMapping("/{id}")
-    public boolean deleteFlight(@PathVariable String id){
-        return flightService.deleteFlight(id);
+    public boolean deleteFlight(@PathVariable String id) throws SpecialException {
+
+        if(!flightService.deleteFlight(id)){
+            SpecialException e = new SpecialException();
+            e.setCode(404);
+            e.setMessage("Could not delete flight. Please ensure flight id is correct");
+            throw e;
+        }
+        return true;
     }
 }
