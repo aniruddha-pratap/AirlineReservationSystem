@@ -16,51 +16,50 @@ import com.sjsu.airline.Passengers.Passenger;
 @Table(name = "reservation")
 public class Reservation {
 
-	@Id
-	@GeneratedValue
-	@Column(name="order_number")
-	private int orderNumber;
+    @Id
+    @GeneratedValue
+    @Column(name="order_number")
+    private int orderNumber;
 
-	private int price;
+    private int price;
 
-	@ManyToOne
-	@JoinColumn(name="passenger_id")
-	@JsonBackReference
-	private Passenger passenger;
+    @ManyToOne
+    @JsonBackReference
+    private Passenger passenger;
 
-	/*@ManyToMany(mappedBy="reservation", fetch= FetchType.EAGER, cascade=CascadeType.ALL)
-	@JsonManagedReference*/
-	@ManyToMany(fetch= FetchType.EAGER, cascade=CascadeType.ALL)
-	@JoinTable(name="reservation_flight", joinColumns= {@JoinColumn(name="order_number")},
-			inverseJoinColumns = {@JoinColumn(name="flight_number")})
-	@JsonManagedReference
-	private Set<Flight> flights=new HashSet<>();
+    /*@ManyToMany(mappedBy="reservation", fetch= FetchType.EAGER, cascade=CascadeType.ALL)
+    @JsonManagedReference*/
+    @ManyToMany(fetch= FetchType.EAGER, cascade=CascadeType.ALL)
+    @JoinTable(name="reservation_flight", joinColumns= {@JoinColumn(name="order_number")},
+            inverseJoinColumns = {@JoinColumn(name="flight_number")})
+    @JsonManagedReference
+    private Set<Flight> flights=new HashSet<>();
 
-	public int getOrderNumber() {
-		return orderNumber;
-	}
-	public void setOrderNumber(int orderNumber) {
-		this.orderNumber = orderNumber;
-	}
-	public int getPrice() {
-		return price;
-	}
-	public void setPrice(int price) {
-		this.price = price;
-	}
-	public Passenger getPassenger() {
-		return passenger;
-	}
-	public void setPassenger(Passenger passenger) {
-		this.passenger = passenger;
-	}
+    public int getOrderNumber() {
+        return orderNumber;
+    }
+    public void setOrderNumber(int orderNumber) {
+        this.orderNumber = orderNumber;
+    }
+    public int getPrice() {
+        return price;
+    }
+    public void setPrice(int price) {
+        this.price = price;
+    }
+    public Passenger getPassenger() {
+        return passenger;
+    }
+    public void setPassenger(Passenger passenger) {
+        this.passenger = passenger;
+    }
 
-	public Set<Flight> getFlights(){return flights;}
+    public Set<Flight> getFlights(){return flights;}
 
 
-	public void addFlight(Flight flight) {
-		if(this.flights==null)
-			System.out.println("Null found! \n\n\n");
-		this.flights.add(flight);
-	}
+    public void addFlight(Flight flight) {
+        if(this.flights==null)
+            System.out.println("Null found! \n\n\n");
+        this.flights.add(flight);
+    }
 }
