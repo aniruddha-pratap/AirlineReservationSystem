@@ -3,7 +3,7 @@ package com.sjsu.airline.Exception;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ExceptionResponse {
+public class Response {
 
 	private String code;
 	private String msg;
@@ -20,8 +20,5 @@ public class ExceptionResponse {
 	public void setMsg(String msg) {
 		this.msg = msg;
 	}
-	
-	
-	
 	
 }

@@ -5,6 +5,6 @@ spring:
     username: Aniruddha 
     password: 12345
   jpa:
-    hibernate.ddl-auto: create-drop
+    hibernate.ddl-auto: none
     generate-ddl: true
     show-sql: true      
