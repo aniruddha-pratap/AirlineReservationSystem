@@ -30,7 +30,7 @@ public class Reservation {
 
 	/*@ManyToMany(mappedBy="reservation", fetch= FetchType.EAGER, cascade=CascadeType.ALL)
 	@JsonManagedReference*/
-	@ManyToMany(fetch= FetchType.EAGER, cascade=CascadeType.ALL)
+	@ManyToMany()
 	@JoinTable(name="reservation_flight", joinColumns= {@JoinColumn(name="order_number")},
 			inverseJoinColumns = {@JoinColumn(name="flight_number")})
 	@JsonManagedReference

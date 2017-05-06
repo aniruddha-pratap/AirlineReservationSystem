@@ -30,8 +30,8 @@ public class Passenger {
 	@JsonManagedReference
 	private List<Reservation> reservation;
 
-	@ManyToMany(mappedBy="passengers", cascade=CascadeType.ALL)
-	@JsonManagedReference
+	@ManyToMany(mappedBy="passengers")
+	@JsonBackReference
 	private List<Flight> flight;
 
 	public Passenger(){
