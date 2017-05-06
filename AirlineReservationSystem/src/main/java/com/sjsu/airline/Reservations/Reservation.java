@@ -1,6 +1,7 @@
 package com.sjsu.airline.Reservations;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -9,7 +10,6 @@ import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.sjsu.airline.Flight.Flight;
-//import com.sjsu.airline.Flight.Flight;
 import com.sjsu.airline.Passengers.Passenger;
 
 @Entity
@@ -23,18 +23,18 @@ public class Reservation {
 
 	private int price;
 
-	@ManyToOne(cascade=CascadeType.ALL)
+	@ManyToOne
 	@JoinColumn(name="passenger_id")
 	@JsonBackReference
 	private Passenger passenger;
 
 	/*@ManyToMany(mappedBy="reservation", fetch= FetchType.EAGER, cascade=CascadeType.ALL)
 	@JsonManagedReference*/
-	@ManyToMany(fetch= FetchType.EAGER, cascade=CascadeType.ALL)
+	@ManyToMany(fetch= FetchType.EAGER)
 	@JoinTable(name="reservation_flight", joinColumns= {@JoinColumn(name="order_number")},
 			inverseJoinColumns = {@JoinColumn(name="flight_number")})
 	@JsonManagedReference
-	private List<Flight> flights=new ArrayList<>();
+	private Set<Flight> flights=new HashSet<>();
 
 	public int getOrderNumber() {
 		return orderNumber;
@@ -55,11 +55,7 @@ public class Reservation {
 		this.passenger = passenger;
 	}
 
-	public List<Flight> getFlights(){return flights;}
-
-//	public void setFlights(List<Flight> flights){
-//		this.flights=flights;
-//	}
+	public Set<Flight> getFlights(){return flights;}
 
 
 	public void addFlight(Flight flight) {

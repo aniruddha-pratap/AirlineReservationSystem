@@ -23,6 +23,16 @@ public class FlightService {
     @Autowired
     private FlightRepository flightRepository;
 
+    public Flight save(Flight flight) {
+        try {
+            flightRepository.save(flight);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+
+        return flight;
+    }
     public Flight saveOrUpdateFlight(Flight flight) {
 
         if(!flightRepository.exists(flight.getNumber())) {
@@ -37,22 +47,25 @@ public class FlightService {
 
         Flight presentFlight=flightRepository.getOne(flight.getNumber());
         List<Passenger> passengers=presentFlight.getPassengers();
+        if(passengers==null) {
+            System.out.println(" No passengers found for flight. Updating/Saving it now");
+            return flight;
+        }
 
         List<Date> newTiming=new ArrayList<>();
-        newTiming.add(flight.getArrivalTime());
         newTiming.add(flight.getDepartureTime());
+        newTiming.add(flight.getArrivalTime());
+
 
         for(Passenger passenger:passengers){
-            if(passenger==null)
-                System.out.println("Passenger is null in Flight Service");
             List<Reservation> reservations=passenger.getReservation();
             for(Reservation reservation:reservations){
-                List<Flight> bookedFlights=reservation.getFlights();
+                Set<Flight> bookedFlights=reservation.getFlights();
                 for(Flight bookedFlight:bookedFlights){
                     if(bookedFlight != presentFlight){
                         List<Date> reservedTiming=new ArrayList<>();
-                        reservedTiming.add(bookedFlight.getArrivalTime());
                         reservedTiming.add(bookedFlight.getDepartureTime());
+                        reservedTiming.add(bookedFlight.getArrivalTime());
                         if(overlap(newTiming,reservedTiming))
                             return null;
                     }
@@ -77,7 +90,15 @@ public class FlightService {
     }
 
     public List<Flight> getAllFlights() {
-        return flightRepository.findAll();
+        List<Flight> results=null;
+        try{
+            results=flightRepository.findAll();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return null;
+        }
+        return results;
     }
 
     public Flight getFlight(String id) {
