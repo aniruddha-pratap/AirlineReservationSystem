@@ -74,7 +74,7 @@ public class ReservationService {
                 }
             }
             if(flightService.addPassenger(flightsToBeReserved.get(i),passenger)==null) {
-                System.out.println("Unable to add passenger to flight :"+flightsToBeReserved.get(i).toString());
+                System.out.println("Unable to add passenger to flight as seats left is zero:"+flightsToBeReserved.get(i).toString());
                 return null;
             }
         }
@@ -107,7 +107,7 @@ public class ReservationService {
     public List<Reservation> searchReservation(Integer passengerID, String from, String to, String flightNumber) {
         List<Reservation> searchResults=null;
         try {
-            searchResults = reservationRepository.findByPassengerIdOrFlightNumberOrFromSourceOrToDestination(passengerID, from, to, flightNumber);
+            searchResults = reservationRepository.findByPassengerIdOrFlightNumberOrFromSourceOrToDestination(passengerID,flightNumber, from, to);
         }
         catch (Exception e){
             e.printStackTrace();

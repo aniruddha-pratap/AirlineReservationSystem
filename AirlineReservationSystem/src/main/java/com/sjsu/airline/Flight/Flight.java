@@ -52,7 +52,8 @@ public class Flight {
 
 	
 	
-	@ManyToMany(cascade = javax.persistence.CascadeType.REFRESH)
+	//@ManyToMany(cascade = javax.persistence.CascadeType.REFRESH)
+	@ManyToMany
 	@JoinTable(name="flight_passengers", joinColumns= {@JoinColumn(name="flight_number")},
 	inverseJoinColumns = {@JoinColumn(name="passenger_id")})
 	@JsonManagedReference

@@ -107,7 +107,7 @@ public class PassangerController {
 	
 	@DeleteMapping("/{id}") //Check for Success code.
 	public List<Passenger> deletePassenger(@PathVariable int id) throws SpecialException {
-		;
+		
 		if(!passengerService.deletePassenger(id))
 		{
 			SpecialException e = new SpecialException();

@@ -26,8 +26,7 @@ public class Passenger {
 	@Column(unique=true)
 	private String phone;
 
-	@OneToMany
-	@JoinColumn(name="order_number")
+	@OneToMany(mappedBy = "passenger")//for pass res relation.
 	@JsonManagedReference
 	private List<Reservation> reservation;
 

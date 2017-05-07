@@ -50,7 +50,7 @@ public class ReservationController {
         if(reservation==null){
             SpecialException e = new SpecialException();
             e.setCode(404);
-            e.setMessage("Sorry! The requested reservarion for passenger with id "+passengerID+" could not be performed. Either passenger or flight not present or conflict detected.");
+            e.setMessage("Sorry! The requested reservarion for passenger with id "+passengerID+" could not be performed. Either passenger or flight not present or conflict detected or seats remaining is zero");
             throw e;
         }
         return new ResponseEntity(XML.toString(res_Object), HttpStatus.OK);
@@ -63,7 +63,7 @@ public class ReservationController {
                                                @RequestParam(value="flightNumber",required = false) String flightNumber) throws SpecialException {
 
         List<Reservation> reservations= reservationService.searchReservation(passengerID,from,to,flightNumber);
-        if(reservations==null){
+        if(reservations==null || reservations.size()==0){
             SpecialException e = new SpecialException();
             e.setCode(404);
             e.setMessage("Sorry your search returned no results.");
@@ -126,7 +126,7 @@ public class ReservationController {
             if (!reservationService.addFlights(id, flightsAdded)){
                 SpecialException e = new SpecialException();
                 e.setCode(404);
-                e.setMessage("Could not add flights to reservation. Please check for conflicts before retrying");
+                e.setMessage("Could not add flights to reservation. Please check for conflicts before retrying or seats left is zero.");
                 throw e;
             }
             if (flightsRemoved != null) {
