@@ -31,7 +31,7 @@ public class PassengerService {
 		return passengerRepository.findAll();
 	}
 	
-	public Passenger createPassenger(Passenger pass){
+	public Passenger createPassenger(Passenger pass){ // Creates a new passenger with the given passenger object
 		try{
 			passengerRepository.save(pass);
 		}catch(Exception e){
@@ -40,7 +40,7 @@ public class PassengerService {
 		return pass;
 	}
 	
-	public boolean deletePassenger(int id){
+	public boolean deletePassenger(int id){ // Deletes the given passenger
 		try{
 			Passenger passenger=passengerRepository.findOne(id);
 		
@@ -102,8 +102,4 @@ public class PassengerService {
 		//passengerRepository.save(passenger);
 	}
 
-//	public Passenger addFlight(Flight flight, Passenger passenger) {
-//		passenger.addFlight(flight);
-//		return passenger;
-//	}
 }

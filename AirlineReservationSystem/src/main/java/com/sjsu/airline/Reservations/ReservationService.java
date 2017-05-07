@@ -25,7 +25,7 @@ public class ReservationService {
     @Autowired
     PassengerService passengerService;
 
-    public Reservation getReservation(int id) {
+    public Reservation getReservation(int id) { // Gets the specific reservation
         Reservation reservation=null;
         try {
             reservation = reservationRepository.findOne(id);
@@ -37,7 +37,7 @@ public class ReservationService {
         return reservation;
     }
 
-    public Reservation makeReservation(int passengerID, List<String> flightLists) {
+    public Reservation makeReservation(int passengerID, List<String> flightLists) { // Makes a new reservation
         List<Flight> flightsToBeReserved=new ArrayList<>();
         int cost=0;
         Passenger passenger=passengerService.getPassenger(passengerID);
@@ -60,7 +60,7 @@ public class ReservationService {
 
         for(int i=0;i<flightsToBeReserved.size();i++){
             for(int j=i+1;j<flightsToBeReserved.size();j++){
-                if(flightsToBeReserved.get(i).conflict(flightsToBeReserved.get(j)))
+                if(flightsToBeReserved.get(i).conflict(flightsToBeReserved.get(j))) // Checks for overlap
                 {
                     System.out.println("Conflict while reserving flight :"+flightsToBeReserved.get(i).toString()+"\n\nand\n\n"+flightsToBeReserved.get(j).toString());
                     return null;
@@ -68,7 +68,7 @@ public class ReservationService {
             }
             List<Reservation> otherReservations=passenger.getReservation();
             for(Reservation reservation:otherReservations){
-                if(overlap(reservation,flightsToBeReserved.get(i))) {
+                if(overlap(reservation,flightsToBeReserved.get(i))) { // Checks for overlap
                     System.out.println("Rservation conflict with other reservation :"+reservation.toString());
                     return null;
                 }
@@ -104,6 +104,7 @@ public class ReservationService {
         return reservation;
     }
 
+    //Search a reservation
     public List<Reservation> searchReservation(Integer passengerID, String from, String to, String flightNumber) {
         List<Reservation> searchResults=null;
         try {
@@ -115,7 +116,7 @@ public class ReservationService {
         return searchResults;
     }
 
-    public boolean deleteReservation(Integer id) {
+    public boolean deleteReservation(Integer id) { // Deletes a specific reservation
         try {
             Reservation reservation=reservationRepository.findOne((int)id);
             if(reservation==null){
@@ -150,7 +151,7 @@ public class ReservationService {
     }
 
 
-    public boolean addFlights(Integer id, List<String> flightsAdded) {
+    public boolean addFlights(Integer id, List<String> flightsAdded) { //Adds a flight to the reservation with id
         Reservation reservation=reservationRepository.getReservation(id);
         if(reservation==null) return false;
 
@@ -196,7 +197,7 @@ public class ReservationService {
     }
 
 
-    public boolean removeFlights(Integer id, List<String> flightsRemoved) {
+    public boolean removeFlights(Integer id, List<String> flightsRemoved) { // Removes flight from reservatin with id
         Reservation reservation=reservationRepository.getReservation(id);
         if(reservation==null) return false;
 
@@ -223,7 +224,7 @@ public class ReservationService {
         return true;
     }
 
-    public boolean bookedFight(Integer id, String flightId) {
+    public boolean bookedFight(Integer id, String flightId) { // Checks if flight is booked in reservation wth id
         Reservation reservation=reservationRepository.findOne(id);
 
         Flight flight=flightService.getFlight(flightId);

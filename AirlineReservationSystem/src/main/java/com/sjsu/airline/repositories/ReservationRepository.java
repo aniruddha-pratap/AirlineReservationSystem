@@ -22,13 +22,14 @@ public interface ReservationRepository extends JpaRepository<Reservation, Intege
             "inner join reservation_flight r2 on r.order_number=r2.order_number \n" +
             "inner join flight f1 on f1.flight_number=r2.flight_number\n" +
             "\n" +
-            "where r.passenger_passenger_id=ifnull(?1,r.passenger_passenger_id)\n" +
+            "where r.passenger_id=ifnull(?1,r.passenger_id)\n" +
             "and\n" +
             "r2.flight_number=ifnull(?2,r2.flight_number)\n" +
             "and\n" +
             "f1.from_source=ifnull(?3,f1.from_source)\n" +
             "and\n" +
             "f1.to_destination=ifnull(?4,f1.to_destination)",nativeQuery = true)
+
     List<Reservation> findByPassengerIdOrFlightNumberOrFromSourceOrToDestination(Integer passenger_id,String flightNumber,String from, String to);
 
     @Query(value="select * from reservation where order_number=?1",nativeQuery = true)

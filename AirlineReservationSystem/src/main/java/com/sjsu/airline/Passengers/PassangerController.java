@@ -37,13 +37,13 @@ public class PassangerController {
 	@Autowired
 	private PassengerService passengerService; 
 	
-	@GetMapping(value="/allPassengers")
+	@GetMapping(value="/allPassengers") // Gets a List of all passengers in the database
 	public List<Passenger> getAllPassengers(@RequestParam(value="xml") String xml){
 		System.out.println("In get all passengers/..");
 		return passengerService.getAllPassengers();
 	}
 	
-	@GetMapping("/passenger/{id}")
+	@GetMapping("/passenger/{id}") // Gets a particular passenger with the id
 	public ResponseEntity/*Passenger*/ getPassenger(@PathVariable int id, @RequestParam(value="json", required=false) String json, @RequestParam(value="xml", required=false) boolean xml) throws Exception{
 		if(passengerService.getPassenger(id) ==  null)
 		{
@@ -69,7 +69,7 @@ public class PassangerController {
 		//return ResponseEntity.ok(res.toString());
 	}
 		
-	@PostMapping("/passenger")
+	@PostMapping("/passenger")// Posts a new passenger with the detail
 	public ResponseEntity createPassenger(@RequestParam(value="firstname", required=true) String firstName, @RequestParam(value="lastname", required=true) String lastName, @RequestParam(value="age", required=true) int age, @RequestParam(value="gender", required=true) String gender, @RequestParam(value="phone", required=true) String phone) throws Exception{
 		Passenger pa = new Passenger();
 		pa.setFirstname(firstName);
@@ -90,7 +90,7 @@ public class PassangerController {
 		return new ResponseEntity(resultMap, HttpStatus.OK);
 	}
 	
-	@PutMapping("/passenger/{id}")
+	@PutMapping("/passenger/{id}") // Updates an existing passenger
 	public ResponseEntity updatePassenger(@PathVariable int id, @RequestParam(value="firstname", required=true) String firstName, @RequestParam(value="lastname", required=true) String lastName, @RequestParam(value="age", required=true) int age, @RequestParam(value="gender", required=true) String gender, @RequestParam(value="phone", required=true) String phone) throws Exception{
 		if(passengerService.updatePassenger(id, firstName, lastName, age, gender, phone) ==  null)
 		{
@@ -105,7 +105,7 @@ public class PassangerController {
 		return new ResponseEntity(resultMap, HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/passenger/{id}") //Check for Success code.
+	@DeleteMapping("/passenger/{id}") //Deletes a given passenger
 	public ResponseEntity deletePassenger(@PathVariable int id) throws SpecialException, JSONException {
 		if(!passengerService.deletePassenger(id))
 		{
@@ -122,7 +122,7 @@ public class PassangerController {
 		return new ResponseEntity(res_Object.toString(), HttpStatus.OK);
 	}
 	
-	public JSONObject passengerXML(Passenger passenger){
+	public JSONObject passengerXML(Passenger passenger){ // Formats the passenger object
 		JSONObject resut_json = new JSONObject();
 		try{
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd-HH");

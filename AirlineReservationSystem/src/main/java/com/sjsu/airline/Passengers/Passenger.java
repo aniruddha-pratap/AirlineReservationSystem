@@ -26,7 +26,7 @@ public class Passenger {
 	@Column(unique=true)
 	private String phone;
 
-	@OneToMany(mappedBy="passenger")
+	@OneToMany(mappedBy="passenger") // One passenger can have multiple reservations
 	@JsonManagedReference
 	private List<Reservation> reservation;
 

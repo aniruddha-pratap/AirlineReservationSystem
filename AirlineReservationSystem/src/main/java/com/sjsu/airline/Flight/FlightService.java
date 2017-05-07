@@ -23,7 +23,7 @@ public class FlightService {
     @Autowired
     private FlightRepository flightRepository;
 
-    public Flight save(Flight flight) {
+    public Flight save(Flight flight) { // Saves a flight
         try {
             flightRepository.save(flight);
         }
@@ -33,7 +33,7 @@ public class FlightService {
 
         return flight;
     }
-    public Flight saveOrUpdateFlight(Flight flight) {
+    public Flight saveOrUpdateFlight(Flight flight) { // Saves a new flight or updates an existing flight
 
         if(!flightRepository.exists(flight.getNumber())) {
             try {
@@ -58,7 +58,7 @@ public class FlightService {
         newTiming.add(flight.getArrivalTime());
 
 
-        for(Passenger passenger:passengers){
+        for(Passenger passenger:passengers){ //Checks for overlap with reservations of all passengers
             List<Reservation> reservations=passenger.getReservation();
             for(Reservation reservation:reservations){
                 Set<Flight> bookedFlights=reservation.getFlights();
@@ -131,7 +131,7 @@ public class FlightService {
         }
     }
 
-    public Passenger addPassenger(Flight flight, Passenger passenger) {
+    public Passenger addPassenger(Flight flight, Passenger passenger) { // Adds a passenger to the flight
         if(flight.getSeatsLeft()<=0)
             return null;
         System.out.println("Flight :"+flight+" passenger :"+passenger);
@@ -145,7 +145,7 @@ public class FlightService {
         flight.setReservation(reservation);
     }
 
-    public boolean exists(String flightId) {
+    public boolean exists(String flightId) { // Checks if a flight with the id exists in db
         Flight flight=flightRepository.findOne(flightId);
         if(flight==null)
             return false;

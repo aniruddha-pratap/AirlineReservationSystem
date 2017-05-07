@@ -1,6 +1,3 @@
-/* Work on returning error messages */
-
-
 package com.sjsu.airline.Flight;
 
 import com.sjsu.airline.Exception.SpecialException;
@@ -12,7 +9,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +36,7 @@ public class FlightController {
     @Autowired
     private FlightService flightService;
 
-    @GetMapping(value = "/allFlights")
+    @GetMapping(value = "/allFlights") // CGet request that returns all the flights in the system
     public List<Flight> getAllFlights(@RequestParam(value="xml") String xml) throws SpecialException {
 
         List<Flight> results= flightService.getAllFlights();
@@ -50,7 +49,7 @@ public class FlightController {
         return results;
     }
 
-    @GetMapping(value = "/{id}")
+    @GetMapping(value = "/{id}") // returns a particular flight with the required Flight ID
     public ResponseEntity getFlight(@PathVariable String id, @RequestParam(value="json", required=false) String json, @RequestParam(value="xml", required=false) boolean xml) throws SpecialException, JSONException {
         Flight flightResult= flightService.getFlight(id);
         if(flightResult==null){
@@ -70,7 +69,7 @@ public class FlightController {
         return new ResponseEntity(res_Object.toString(), HttpStatus.OK);
     }
 
-    @PostMapping(value="/{id}")
+    @PostMapping(value="/{id}") // Posts a flight detail object to the database
     public ResponseEntity saveOrUpdateFlight(@PathVariable String id,
                                       @RequestParam(value="price") int price,
                                       @RequestParam(value="from") String from,
@@ -119,10 +118,12 @@ public class FlightController {
             throw e;
         }
         JSONObject res_Object = formatFlight(flightResult);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_XML);
         return new ResponseEntity(XML.toString(res_Object), HttpStatus.OK);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/{id}") // Deletes a flight with the given id
     public ResponseEntity deleteFlight(@PathVariable String id) throws SpecialException, JSONException {
 
         if(!flightService.deleteFlight(id)){
@@ -136,11 +137,13 @@ public class FlightController {
 		error.put("code", "200");
 		error.put("msg", "Flight with id "+id+" deleted successfully!");
 		res_Object.put("Response", error);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_XML);
 		return new ResponseEntity(XML.toString(res_Object), HttpStatus.OK);
     }
     
     
-    public JSONObject formatFlight(Flight flight){
+    public JSONObject formatFlight(Flight flight){ // Formats the flight in the right aspect
     	JSONObject resut_json = new JSONObject();
     	try{
     		JSONObject json_new = new JSONObject();
@@ -152,8 +155,11 @@ public class FlightController {
             json_new.put("price", flight.getPrice());
             json_new.put("fromSource", flight.getFromSource());
             json_new.put("toDestination", flight.getToDestination());
-            json_new.put("departureTime", flight.getDepartureTime());
-            json_new.put("arrivalTime", flight.getArrivalTime());
+
+            DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH");
+
+            json_new.put("departureTime", formatter.format(flight.getDepartureTime()));
+            json_new.put("arrivalTime", formatter.format(flight.getArrivalTime()));
             json_new.put("seatsLeft", Integer.toString(flight.getSeatsLeft()));
             json_new.put("description", flight.getDescription());
             System.out.println("JSON0-before:"+json_new.toString());

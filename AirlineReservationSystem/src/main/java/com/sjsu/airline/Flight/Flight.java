@@ -20,13 +20,13 @@ public class Flight {
 
 	@Id
 	@Column(name="flight_number")
-	private String number;
-	private int price;
-	private String fromSource;
-	private String toDestination;
+	private String number; //Flight Number
+	private int price; // Price
+	private String fromSource; // From the Source
+	private String toDestination; // To the destination
 
-	@DateTimeFormat(pattern="yyyy-MM-dd-HH")
-	private Date departureTime;
+	@DateTimeFormat(pattern="yyyy-MM-dd-HH") //Date - Time format annotation
+	private Date departureTime; //Departure Time
 	@DateTimeFormat(pattern="yyyy-MM-dd-HH")
 
 	private Date arrivalTime;
@@ -79,6 +79,8 @@ public class Flight {
 				", plane=" + plane.toString() +
 				'}';
 	}
+
+	// List of getters and setters
 
 	public String getNumber() {
 		return number;
@@ -157,13 +159,13 @@ public class Flight {
 		return this.reservation;
 	}
 
-    public boolean conflict(Flight flight) {
+    public boolean conflict(Flight flight) { // Used to check if there is an overlap between another flight and this one
 		if(this.getArrivalTime().compareTo(flight.getDepartureTime())<0||this.getDepartureTime().compareTo(flight.getArrivalTime())>0)
 			return false;
 		return true;
     }
 
-	public void removePassenger(Passenger passenger) {
+	public void removePassenger(Passenger passenger) { // Used for removing passenger from list of reserved passengers.
 		for(int i=0;i<this.passengers.size();i++){
 			if(this.passengers.get(i).equals(passenger)) {
 				this.passengers.remove(i);

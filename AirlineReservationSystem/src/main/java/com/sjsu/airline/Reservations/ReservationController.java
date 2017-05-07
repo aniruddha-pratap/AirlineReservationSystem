@@ -9,7 +9,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.lang.reflect.Field;
@@ -53,10 +55,12 @@ public class ReservationController {
             e.setMessage("Sorry! The requested reservarion for passenger with id "+passengerID+" could not be performed. Either passenger or flight not present or conflict detected or seats remaining is zero");
             throw e;
         }
-        return new ResponseEntity(XML.toString(res_Object), HttpStatus.OK);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_XML);
+        return new ResponseEntity(XML.toString(res_Object), httpHeaders,HttpStatus.OK);
     }
 
-    @GetMapping
+    @GetMapping // Returns a response entity for the search reservation
     public ResponseEntity searchReservation(@RequestParam(value = "passengerId", required = false) Integer passengerID,
                                                @RequestParam(value="from",required = false) String from,
                                                @RequestParam(value="to", required = false) String to,
@@ -78,10 +82,12 @@ public class ReservationController {
         }
         JSONArray flJsArray = new JSONArray(reservationList);
         jsonO.put("reservations", flJsArray);
-        return new ResponseEntity(XML.toString(jsonO), HttpStatus.OK);
+        HttpHeaders httpHeaders = new HttpHeaders();
+        httpHeaders.setContentType(MediaType.APPLICATION_XML);
+        return new ResponseEntity(XML.toString(jsonO), httpHeaders,HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(value = "/{id}") // Deletes a reservation with the given id
     public ResponseEntity deleteReservation(@PathVariable Integer id) throws SpecialException, JSONException {
     	//reservationService.deleteReservation(id);
         if(!reservationService.deleteReservation(id)){
@@ -110,7 +116,7 @@ public class ReservationController {
         return new ResponseEntity(res_Object.toString(), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/{id}")
+    @PostMapping(value = "/{id}") // Updates the reservation
     public ResponseEntity updateReservation(@PathVariable Integer id,
                                          @RequestParam(value = "flightsAdded", required = false) List<String> flightsAdded,
                                          @RequestParam(value = "flightsRemoved", required = false) List<String> flightsRemoved) throws SpecialException {
@@ -218,6 +224,7 @@ public class ReservationController {
 					flightObj.put("to", flight.getToDestination());
 					flightObj.put("departureTime", dateFormat.format(flight.getDepartureTime()));
 					flightObj.put("arrivalTime", dateFormat.format(flight.getArrivalTime()));
+                    flightObj.put("seatsLeft", Integer.toString(flight.getSeatsLeft()));
 					flightObj.put("description", flight.getDescription());
 					JSONObject plane = new JSONObject();
 					Field pMap = plane.getClass().getDeclaredField("map");
