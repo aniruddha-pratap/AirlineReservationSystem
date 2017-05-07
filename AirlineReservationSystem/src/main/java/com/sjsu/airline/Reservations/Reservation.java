@@ -24,6 +24,7 @@ public class Reservation {
     private int price;
 
     @ManyToOne
+    @JoinColumn(name="passenger_id")
     @JsonBackReference
     private Passenger passenger;
 

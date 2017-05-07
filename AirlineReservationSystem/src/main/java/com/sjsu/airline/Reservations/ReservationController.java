@@ -57,10 +57,10 @@ public class ReservationController {
     }
 
     @GetMapping
-    public List<Reservation> searchReservation(@RequestParam(value = "passengerId", required = false) Integer passengerID,
+    public ResponseEntity searchReservation(@RequestParam(value = "passengerId", required = false) Integer passengerID,
                                                @RequestParam(value="from",required = false) String from,
                                                @RequestParam(value="to", required = false) String to,
-                                               @RequestParam(value="flightNumber",required = false) String flightNumber) throws SpecialException {
+                                               @RequestParam(value="flightNumber",required = false) String flightNumber) throws SpecialException, JSONException {
 
         List<Reservation> reservations= reservationService.searchReservation(passengerID,from,to,flightNumber);
         if(reservations==null){
@@ -69,11 +69,20 @@ public class ReservationController {
             e.setMessage("Sorry your search returned no results.");
             throw e;
         }
-        return reservations;
+        JSONObject jsonO = new JSONObject();
+        List<JSONObject> reservationList = new ArrayList<JSONObject>();
+        if(reservations != null){
+        	for(Reservation reservation: reservations){
+        		reservationList.add(formatReservation(reservation));
+        	}
+        }
+        JSONArray flJsArray = new JSONArray(reservationList);
+        jsonO.put("reservations", flJsArray);
+        return new ResponseEntity(XML.toString(jsonO), HttpStatus.OK);
     }
 
     @DeleteMapping(value = "/{id}")
-    public boolean deleteReservation(@PathVariable Integer id) throws SpecialException {
+    public ResponseEntity deleteReservation(@PathVariable Integer id) throws SpecialException, JSONException {
     	//reservationService.deleteReservation(id);
         if(!reservationService.deleteReservation(id)){
             SpecialException e = new SpecialException();
@@ -81,8 +90,24 @@ public class ReservationController {
             e.setMessage("Reservation with number "+id+" does not exist ");
             throw e;
         }
-
-        return true;
+        JSONObject res_Object = new JSONObject();
+        try{
+        	JSONObject jsonO = new JSONObject();
+	    	Field map = jsonO.getClass().getDeclaredField("map");
+			map.setAccessible(true);//because the field is private final...
+			map.set(jsonO, new LinkedHashMap<>());
+			map.setAccessible(false);//return flag
+			jsonO.put("code", "200");
+			jsonO.put("msg", "Reservation with number "+id+" is cancelled successfully!");
+			res_Object.put("Resposne", jsonO);
+		}
+        catch(Exception e){
+			SpecialException p = new SpecialException();
+            p.setCode(404);
+            p.setMessage("Reservation with number "+id+" does not exist ");
+            throw p;
+		}
+        return new ResponseEntity(res_Object.toString(), HttpStatus.OK);
     }
 
     @PostMapping(value = "/{id}")
