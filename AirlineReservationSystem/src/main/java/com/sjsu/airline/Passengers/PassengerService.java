@@ -19,7 +19,12 @@ public class PassengerService {
 	private ReservationService reservationService;
 
 	public Passenger getPassenger(int id){
-		return passengerRepository.findOne(id);
+		try{
+			return passengerRepository.findOne(id);
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	public List<Passenger> getAllPassengers(){
@@ -67,16 +72,21 @@ public class PassengerService {
 	}
 	
 	public Passenger updatePassenger(int id, String firstName, String lastName, int age, String gender, String phone){
-		System.out.println("before update");
-		Passenger p=passengerRepository.findOne(id);
-		System.out.println("Processed update");
-		if(p !=null){
-			p.setFirstname(firstName);
-			p.setLastname(lastName);
-			p.setGender(gender);
-			p.setAge(age);
-			p.setPhone(phone);
-			passengerRepository.save(p);
+		try{
+			System.out.println("before update");
+			Passenger p=passengerRepository.findOne(id);
+			System.out.println("Processed update");
+			if(p !=null){
+				p.setFirstname(firstName);
+				p.setLastname(lastName);
+				p.setGender(gender);
+				p.setAge(age);
+				p.setPhone(phone);
+				passengerRepository.save(p);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
 		}
 		return passengerRepository.findOne(id);
 	}
