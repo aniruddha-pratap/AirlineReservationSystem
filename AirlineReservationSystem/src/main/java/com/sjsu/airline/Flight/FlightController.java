@@ -4,14 +4,27 @@
 package com.sjsu.airline.Flight;
 
 import com.sjsu.airline.Exception.SpecialException;
+import com.sjsu.airline.Passengers.Passenger;
+import com.sjsu.airline.Reservations.Reservation;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.XML;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
+import java.lang.reflect.Field;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 /**
@@ -38,20 +51,27 @@ public class FlightController {
     }
 
     @GetMapping(value = "/{id}")
-    public Flight getFlight(@PathVariable String id) throws SpecialException {
-
+    public ResponseEntity getFlight(@PathVariable String id, @RequestParam(value="json", required=false) String json, @RequestParam(value="xml", required=false) boolean xml) throws SpecialException, JSONException {
         Flight flightResult= flightService.getFlight(id);
         if(flightResult==null){
             SpecialException e = new SpecialException();
+            if(xml == true){
+				e.setXml(true);
+			}
             e.setCode(404);
-            e.setMessage("No flight detected for id "+id);
+            e.setMessage("Sorry the requested flight with "+id+" does not exist!");
             throw e;
         }
-        return flightResult;
+        JSONObject res_Object = formatFlight(flightResult);
+        if(xml == true){
+			System.out.println("Inside xml response");
+			return new ResponseEntity(XML.toString(res_Object), HttpStatus.OK);
+		}
+        return new ResponseEntity(res_Object.toString(), HttpStatus.OK);
     }
 
     @PostMapping(value="/{id}")
-    public Flight saveOrUpdateFlight(@PathVariable String id,
+    public ResponseEntity saveOrUpdateFlight(@PathVariable String id,
                                       @RequestParam(value="price") int price,
                                       @RequestParam(value="from") String from,
                                       @RequestParam(value="to") String to,
@@ -62,10 +82,9 @@ public class FlightController {
                                       @RequestParam(value="model") String model,
                                       @RequestParam(value="manufacturer") String manufacturer,
                                       @RequestParam(value="yearOfManufacture") int yearOfManufacture
-                                      ) throws SpecialException {
+                                      ) throws SpecialException, JSONException {
 
         Flight flight=new Flight();
-
         DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd-HH");
         Date dep = null, arr = null;
         try{
@@ -99,11 +118,12 @@ public class FlightController {
             e.setMessage("Could not update flight. Please ensure flight exists and check for overlap.");
             throw e;
         }
-        return flightResult;
+        JSONObject res_Object = formatFlight(flightResult);
+        return new ResponseEntity(XML.toString(res_Object), HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public boolean deleteFlight(@PathVariable String id) throws SpecialException {
+    public ResponseEntity deleteFlight(@PathVariable String id) throws SpecialException, JSONException {
 
         if(!flightService.deleteFlight(id)){
             SpecialException e = new SpecialException();
@@ -111,6 +131,71 @@ public class FlightController {
             e.setMessage("Could not delete flight. Please ensure flight id is correct and no passengers have booked this flight.");
             throw e;
         }
-        return true;
+        JSONObject error = new JSONObject();
+		JSONObject res_Object = new JSONObject();
+		error.put("code", "200");
+		error.put("msg", "Flight with id "+id+" deleted successfully!");
+		res_Object.put("Response", error);
+		return new ResponseEntity(XML.toString(res_Object), HttpStatus.OK);
+    }
+    
+    
+    public JSONObject formatFlight(Flight flight){
+    	JSONObject resut_json = new JSONObject();
+    	try{
+    		JSONObject json_new = new JSONObject();
+            Field map = json_new.getClass().getDeclaredField("map");
+            map.setAccessible(true);//because the field is private final...
+            map.set(json_new, new LinkedHashMap<>());
+            map.setAccessible(false);//return flag
+            json_new.put("number", flight.getNumber());
+            json_new.put("price", flight.getPrice());
+            json_new.put("fromSource", flight.getFromSource());
+            json_new.put("toDestination", flight.getToDestination());
+            json_new.put("departureTime", flight.getDepartureTime());
+            json_new.put("arrivalTime", flight.getArrivalTime());
+            json_new.put("seatsLeft", Integer.toString(flight.getSeatsLeft()));
+            json_new.put("description", flight.getDescription());
+            System.out.println("JSON0-before:"+json_new.toString());
+            JSONObject plane = new JSONObject();
+            Field pMap = plane.getClass().getDeclaredField("map");
+            pMap.setAccessible(true);//because the field is private final...
+            pMap.set(plane, new LinkedHashMap<>());
+            pMap.setAccessible(false);//return flag
+            plane.put("capacity",Integer.toString(flight.getPlane().getCapacity()));
+            plane.put("model",flight.getPlane().getModel());
+            plane.put("manufacturer",flight.getPlane().getManufacturer());
+            plane.put("yearOfManufacture",Integer.toString(flight.getPlane().getYearOfManufacture()));
+            json_new.put("plane", plane);
+            List<Reservation> reservationList = flight.getReservation();
+            List<JSONObject> passengerList = new ArrayList<JSONObject>();
+            if(reservationList!=null){
+            	for(Reservation reservation: reservationList){
+            		 Passenger passenger = reservation.getPassenger();
+            		 JSONObject passengerObject = new JSONObject();
+                     Field iMap = passengerObject.getClass().getDeclaredField("map");
+                     iMap.setAccessible(true);//because the field is private final...
+                     iMap.set(passengerObject, new LinkedHashMap<>());
+                     iMap.setAccessible(false);//return flag
+                     passengerObject.put("id", Integer.toString(passenger.getPassengerId()));
+                     passengerObject.put("firstname",passenger.getFirstname());
+                     passengerObject.put("lastname",passenger.getLastname());
+                     passengerObject.put("age", Integer.toString(passenger.getAge()));
+                     passengerObject.put("gender",passenger.getGender());
+                     passengerObject.put("phone",passenger.getPhone());  
+                     JSONObject pass_List = new JSONObject();
+                     pass_List.put("passenger", passengerObject);
+                     passengerList.add(pass_List);
+            	}
+            }
+            JSONArray resJsArray = new JSONArray(passengerList);
+            System.out.println("resJsArray:"+resJsArray.toString());
+            json_new.put("passengers", resJsArray);
+            System.out.println("JSON0:"+json_new.toString());
+            resut_json.put("flight", json_new);
+    	}catch(Exception e){
+    		e.printStackTrace();
+    	}
+    	return resut_json;
     }
 }

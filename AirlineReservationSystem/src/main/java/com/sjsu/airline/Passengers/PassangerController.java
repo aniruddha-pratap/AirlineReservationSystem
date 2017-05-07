@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.json.XML;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,6 @@ import com.sjsu.airline.Reservations.Reservation;
 
 
 @RestController
-@RequestMapping("/airline")
 public class PassangerController {
 
 	@Autowired
@@ -105,9 +105,8 @@ public class PassangerController {
 		return new ResponseEntity(resultMap, HttpStatus.OK);
 	}
 	
-	@DeleteMapping("/{id}") //Check for Success code.
-	public List<Passenger> deletePassenger(@PathVariable int id) throws SpecialException {
-		
+	@DeleteMapping("/passenger/{id}") //Check for Success code.
+	public ResponseEntity deletePassenger(@PathVariable int id) throws SpecialException, JSONException {
 		if(!passengerService.deletePassenger(id))
 		{
 			SpecialException e = new SpecialException();
@@ -115,7 +114,12 @@ public class PassangerController {
 			e.setMessage("Passenger with id "+ id+ " does not exist");
 			throw e;
 		}
-		return passengerService.getAllPassengers();
+		JSONObject error = new JSONObject();
+		JSONObject res_Object = new JSONObject();
+		error.put("code", "200");
+		error.put("msg", "Passenger with id "+id+" deleted successfully!");
+		res_Object.put("Response", error);
+		return new ResponseEntity(res_Object.toString(), HttpStatus.OK);
 	}
 	
 	public JSONObject passengerXML(Passenger passenger){

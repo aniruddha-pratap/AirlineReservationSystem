@@ -41,30 +41,36 @@ public class PassengerService {
 	}
 	
 	public boolean deletePassenger(int id){
-		Passenger passenger=passengerRepository.findOne(id);
-		if(passenger==null)
-			return false;
-
-		List<Reservation> reservations=passenger.getReservation();
-
-		Reservation reserves[]=new Reservation[reservations.size()];
-		int i=0;
-
-		for(Reservation res:reservations)
-			reserves[i++]=res;
-
-		try {
-			for (int j=0;j<reserves.length;j++) {
-				reservationService.deleteReservation(reserves[j].getOrderNumber());
+		try{
+			Passenger passenger=passengerRepository.findOne(id);
+		
+			if(passenger==null)
+				return false;
+	
+			List<Reservation> reservations=passenger.getReservation();
+	
+			Reservation reserves[]=new Reservation[reservations.size()];
+			int i=0;
+	
+			for(Reservation res:reservations)
+				reserves[i++]=res;
+	
+			try {
+				for (int j=0;j<reserves.length;j++) {
+					reservationService.deleteReservation(reserves[j].getOrderNumber());
+				}
 			}
-		}
-		catch (Exception e){
-			e.printStackTrace();
-		}
-		try {
-			passengerRepository.delete(id);
-		}
-		catch (Exception e){
+			catch (Exception e){
+				e.printStackTrace();
+			}
+			try {
+				passengerRepository.delete(id);
+			}
+			catch (Exception e){
+				e.printStackTrace();
+				return false;
+			}
+		}catch(Exception e){
 			e.printStackTrace();
 			return false;
 		}
